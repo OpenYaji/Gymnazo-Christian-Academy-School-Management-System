@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "allowJs": true,
+      "jsx": "react-jsx",
+      
+      /* Alias Configuration */
+      "baseUrl": ".", 
+      "paths": {
+        // Maps the @ alias to the src directory
+        "@/*": ["./src/*"] 
+      },
+      "outDir": "./dist" // Specify output directory for compiled files
+    },
+    "include": ["src"]
+  }
+  
