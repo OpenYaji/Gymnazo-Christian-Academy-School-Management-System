@@ -1,9 +1,5 @@
 <?php
-/**
- * API Endpoint: Get Current Academic Grades
- * Fetches the grades, subject details, and academic summary for the
- * currently logged-in student for the active school year.
- */
+
 
 session_start();
 require_once __DIR__ . '/../../config/cors.php';

@@ -10,8 +10,12 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCurrentUser();
-  }, []);
+    if (location.pathname !== '/login') {
+      fetchCurrentUser();
+    } else {
+      setLoading(false);
+    }
+  }, [location.pathname]);
 
   const fetchCurrentUser = async () => {
     try {

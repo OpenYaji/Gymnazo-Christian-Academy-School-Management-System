@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { API_BASE_URL } from '../../config';
 
-// Component Imports (assuming they are in the specified folder)
 import GradesSummary from '../common/academic/grades/GradesSummary';
 import GradesTable from '../common/academic/grades/GradesTable';
 import GradeDetailModal from '../common/academic/grades/GradeDetailModal';
