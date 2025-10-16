@@ -1,7 +1,6 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react'; 
 import { useAuth } from '../../../context/AuthContext';
+import { Link, useNavigate } from 'react-router-dom';
 import Bg from '../../../assets/img/bg.png';
 import SuccessModal from "../../modals/SuccessModal";
 
@@ -13,16 +12,26 @@ const Login = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { user, loading: authLoading, login } = useAuth();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && user && !isSubmitting) {
+      navigate('/student-dashboard', { replace: true });
+    }
+
+  }, [user, authLoading, isSubmitting, navigate]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
+    setIsSubmitting(true);
 
     if (!username.trim() || !password.trim()) {
       setError('Please fill in all fields');
       setLoading(false);
+      setIsSubmitting(false)
       return;
     }
 
@@ -47,6 +56,14 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
+      </div>
+    );
+  }
 
   return (
     <>

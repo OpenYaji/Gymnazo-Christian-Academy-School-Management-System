@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRouteDashboard = ({ children }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -13,14 +13,15 @@ const ProtectedRoute = ({ children }) => {
       </div>
     );
   }
-
+  
   if (!user) {
     // if walang nadetect na user or hindi nag log in, automatic maredirect sya to login page
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
 
   return children;
 };
 
-export default ProtectedRoute;
+
+export default ProtectedRouteDashboard;
 

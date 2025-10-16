@@ -70,7 +70,6 @@ class User {
             JOIN profile p ON u.UserID = p.UserID
             JOIN studentprofile sp ON p.ProfileID = sp.ProfileID
             
-            -- *** THIS IS THE CORRECTED PART ***
             LEFT JOIN (
                 SELECT e_inner.*
                 FROM enrollment e_inner

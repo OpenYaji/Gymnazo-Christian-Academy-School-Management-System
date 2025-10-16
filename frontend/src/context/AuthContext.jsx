@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (username, password) => {
     try {
       const response = await axios.post(
-        'http://localhost/Gymazo-Student-Side/backend/api/auth/login.php',
+        'http://localhost/Gymazo-Student-Side/backend/api/auth/login.php', // need pa to ng enhancement
         { username, password },
         {
           withCredentials: true,
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Logout error:', error);
     } finally {
       setUser(null);
-      navigate('/login');
+      navigate('/');
     }
   };
 

@@ -26,6 +26,7 @@ import PreviousGradesPage from './components/pages/previousGradesPage';
 
 function App() {
   return (
+    <>
     <BrowserRouter>
       <DarkModeProvider>
       <AuthProvider>
@@ -56,6 +57,7 @@ function App() {
       </DarkModeProvider>
       
     </BrowserRouter>
+    </>
   );
 }
 

@@ -38,7 +38,6 @@ export default function DashboardSidebar({ collapsed, setCollapsed, mobileOpen, 
     setLogoutModalOpen(false);
     logout();
     console.log("Logged out successfully.Session Destroyed na lods");
-    navigate('/');
   };
 
   const handleCloseModal = () => {
@@ -61,7 +60,7 @@ export default function DashboardSidebar({ collapsed, setCollapsed, mobileOpen, 
 
   const bottomMenuItems = [
     { name: 'Help Support', icon: <LifeBuoy size={20} />, path: '/student-dashboard/help' },
-    { name: 'Logout', icon: <LogOut size={20} />, path: '/' },
+    { name: 'Logout', icon: <LogOut size={20} /> },
   ];
 
   const NavLink = ({ item, isActive, isCollapsed = false, isMobileLink = false }) => (

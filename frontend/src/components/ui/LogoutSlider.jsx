@@ -17,7 +17,6 @@ export default function LogoutSlider({ onConfirm }) {
 
   const handleInteractionEnd = () => {
     setIsDragging(false);
-    // If slider is not at the end, snap it back
     if (sliderPosition < containerRef.current.offsetWidth - sliderRef.current.offsetWidth - 5) {
       setSliderPosition(0);
     }
@@ -32,24 +31,21 @@ export default function LogoutSlider({ onConfirm }) {
 
     let newX = clientX - containerRect.left - sliderWidth / 2;
     
-    // Clamp the position within the container bounds
     newX = Math.max(0, Math.min(newX, containerWidth - sliderWidth));
     
     setSliderPosition(newX);
 
-    // Check for confirmation
-    if (newX >= containerWidth - sliderWidth - 5) { // -5 for a small tolerance
+    if (newX >= containerWidth - sliderWidth - 5) { 
       setIsConfirmed(true);
       setIsDragging(false);
     }
   };
   
-  // Effect to trigger the final logout action after confirmation animation
   useEffect(() => {
     if (isConfirmed) {
       const timer = setTimeout(() => {
         onConfirm();
-      }, 500); // Wait 500ms for the animation to play
+      }, 700); 
       return () => clearTimeout(timer);
     }
   }, [isConfirmed, onConfirm]);
@@ -65,7 +61,6 @@ export default function LogoutSlider({ onConfirm }) {
         onMouseMove={(e) => handleInteractionMove(e.clientX)}
         onTouchMove={(e) => handleInteractionMove(e.touches[0].clientX)}
       >
-        {/* Sliding Handle */}
         <div
           ref={sliderRef}
           className={`absolute h-12 w-12 bg-yellow-400 rounded-full shadow-lg flex items-center justify-center cursor-grab transition-all duration-200 ease-out ${isDragging ? 'scale-110 cursor-grabbing' : ''} ${isConfirmed ? 'bg-green-500' : ''}`}
