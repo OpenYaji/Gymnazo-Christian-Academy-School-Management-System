@@ -57,8 +57,8 @@ const SplitText = ({
         marginValue === 0
           ? ''
           : marginValue < 0
-            ? `-=${Math.abs(marginValue)}${marginUnit}`
-            : `+=${marginValue}${marginUnit}`;
+          ? `-=${Math.abs(marginValue)}${marginUnit}`
+          : `+=${marginValue}${marginUnit}`;
       const start = `top ${startPct}%${sign}`;
 
       let targets;
@@ -90,7 +90,12 @@ const SplitText = ({
               scrollTrigger: {
                 trigger: el,
                 start,
-                once: true,
+                // --- START OF CHANGES ---
+                // 1. Set 'once' to false to allow the animation to repeat
+                once: false, 
+                // 2. (Recommended) Add toggleActions to make it animate out
+                toggleActions: 'play none none reverse',
+                // --- END OF CHANGES ---
                 fastScrollEnd: true,
                 anticipatePin: 0.4
               },

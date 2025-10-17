@@ -1,16 +1,39 @@
 import React from 'react';
-import TeamImage from '../../../assets/img/team.png';
+import { motion } from 'framer-motion';
+import TeamImage from '../../../assets/img/aboutus.jpg';
 import PixelTransition from '../../ui/PixelTransition';
 import GlareHover from '../../ui/GlareHover';
 import CircularGallery from '../../ui/CircularGallery';
 
-
 const About = () => {
+
+    const leftVariant = {
+        hidden: { opacity: 0, y: 30 }, 
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+    };
+
+    const rightVariant = {
+        hidden: { opacity: 0, y: 30 }, 
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", delay: 0.2 } } // Added a delay
+    };
+
+    const bottomVariant = {
+        hidden: { opacity: 0, y: 30 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", delay: 0.2 } }
+    };
+
     return (
-        <div className="bg-white dark:bg-gray-900 py-20 pt-24 min-h-screen transition-colors duration-300">
+        <div className="bg-white dark:bg-gray-900 py-20 pt-24 min-h-screen transition-colors duration-300 overflow-hidden">
             <div className="container mx-auto px-6">
                 <div className="flex flex-col md:flex-row items-center gap-10">
-                    <div className="w-full md:w-1/2 rounded-xl overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-gray-800/50">
+                    
+                    <motion.div 
+                        className="w-full md:w-1/2 rounded-[50px] overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-gray-800/50"
+                        variants={leftVariant}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: false, amount: 0.2 }}
+                    >
                         <GlareHover
                             glareColor="#ffffff"
                             glareOpacity={0.3}
@@ -25,9 +48,15 @@ const About = () => {
                                 className="w-full h-full object-cover dark:opacity-90"
                             />
                         </GlareHover>
-                    </div>
+                    </motion.div>
 
-                    <div className="w-full md:w-1/2">
+                    <motion.div 
+                        className="w-full md:w-1/2"
+                        variants={rightVariant}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: false, amount: 0.2 }}
+                    >
                         <h4 className="text-xl font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-10 transition-colors duration-300">
                             ABOUT US
                         </h4>
@@ -38,17 +67,22 @@ const About = () => {
                             The Gymnazo Christian Academy is committed in the formation of values and
                             education among their learners by following these philosophical foundations.
                         </p>
-
                         <a href="#about-us-details" className="text-[#F7C236] dark:text-amber-400 font-medium hover:text-yellow-600 dark:hover:text-amber-300 transition duration-150">
                             Learn More
                         </a>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 
-            <div style={{ height: '600px', position: 'relative' }}>
-                <CircularGallery bend={3} textColor="#F4D77D" borderRadius={0.05} scrollEase={0.02} />
-            </div>
+            <motion.div 
+                style={{ height: '600px', position: 'relative', marginTop: '5rem' }}
+                variants={bottomVariant}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.1 }}
+            >
+                <CircularGallery bend={0} textColor="#F4D77D" borderRadius={0.05} scrollEase={0.02} />
+            </motion.div>
         </div>
     );
 }

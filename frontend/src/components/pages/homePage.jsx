@@ -1,9 +1,9 @@
 import React from 'react'
 import Header from '../common/homepage/header'
-import Hero from '../common/homepage/hero'
+import Home from '../common/homepage/home'
 import Update from '../common/homepage/updatesection'
 import About from '../common/homepage/about'
-import Announcement from '../common/homepage/announcement'
+import Announcement from '../common/homepage/announcement/announcement'
 import Footer from '../common/homepage/footer'
 import Contact from '../common/homepage/contact'
 import FAQ from '../common/homepage/faq'
@@ -14,7 +14,7 @@ const Homepage = () => {
       <Header />
       <main className=' min-h-screen'>
         <section id="home">
-          <Hero />
+          <Home />
         </section>
         <section id="about-us">
           <About />

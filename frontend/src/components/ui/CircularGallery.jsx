@@ -349,18 +349,18 @@ class App {
   }
   createMedias(items, bend = 1, textColor, borderRadius, font) {
     const defaultItems = [
-      { image: `${Pic}`, text: '1' },
-      { image: `${Pic2}`, text: '2' },
-      { image: `${Pic3}`, text: '3' },
-      { image: `${Pic4}`, text: '4' },
-      { image: `${Pic5}`, text: '5' },
-      { image: `${Pic6}`, text: '6' },
-      { image: `${Pic7}`, text: '7' },
-      { image: `${Pic8}`, text: '8' },
-      { image: `${Pic9}`, text: '9' },
-      { image: `${Pic10}`, text: '10' },
-      { image: `${Pic11}`, text: '11' },
-      { image: `${Pic12}`, text: '12' }
+      { image: `${Pic}`, text: 'Excellence' },
+      { image: `${Pic2}`, text: 'Achievement' },
+      { image: `${Pic3}`, text: 'Success' },
+      { image: `${Pic4}`, text: 'Knowledge' },
+      { image: `${Pic5}`, text: 'Growth' },
+      { image: `${Pic6}`, text: 'Progress' },
+      { image: `${Pic7}`, text: 'Learning' },
+      { image: `${Pic8}`, text: 'Scholarship' },
+      { image: `${Pic9}`, text: 'Honor' },
+      { image: `${Pic10}`, text: 'Dedication' },
+      { image: `${Pic11}`, text: 'Victory' },
+      { image: `${Pic12}`, text: 'Triumph' }
     ];
     const galleryItems = items && items.length ? items : defaultItems;
     this.mediasImages = galleryItems.concat(galleryItems);
@@ -472,7 +472,7 @@ class App {
 
 export default function CircularGallery({
   items,
-  bend = 3,
+  bend = 0,
   textColor = '#ffffff',
   borderRadius = 0.05,
   font = 'bold 30px Figtree',
