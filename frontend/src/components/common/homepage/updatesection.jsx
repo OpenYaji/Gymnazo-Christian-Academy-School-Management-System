@@ -12,25 +12,25 @@ const UpdatesSection = () => {
       icon: a1,
       title: 'Biblical Foundation',
       content:
-        "We hold a God-centered view, believing all truth is God's truth, and that the Bible is the inspired, infallible, and authoritative word containing this truth.",
+        "God centered view that all truth is God’s truth, and that the Bible is inspired and only infalliable authoritative Word of God that contains this truth.",
     },
     {
       icon: a2,
       title: 'Divine Purpose',
       content:
-        'All creation exists to glorify God. Humanity fulfills this purpose by accepting salvation through Jesus Christ and committing to His Lordship.',
+        'God created all things and sustains all things. Therefore, the universe and humanity are dynamically related to God and have the purpose of glorifying Him. A person can do this by choosing God’s free gift of salvation through His Son. Hereby, committing his or her life to the Lordship of Jesus Christ.',
     },
     {
       icon: a3,
       title: 'Christian Education',
       content:
-        'Administrators and teachers are responsible for meeting the needs of learners in both Christian Life Perspective and Academic Excellence.',
+        'Teachers and Administrators are responsible to understand and meet the need of their learners in terms of Christian Life Perspective and Academic Excellence.',
     },
     {
       icon: a4,
       title: 'Wholesome Environment',
       content:
-        'Our learning environment promotes Christian values and is characterized by a wholesome setting, encouraging both individual and cooperative learning.',
+        'A learning environment that is characterized by wholesome setting. Students are expected to be mindful of their actions promoting and living Christian values. Classrooms that promotes individual at cooperative learning',
     },
   ];
 
