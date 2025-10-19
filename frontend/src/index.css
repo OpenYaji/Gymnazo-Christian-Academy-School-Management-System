@@ -3,8 +3,13 @@
 @tailwind utilities;
 
 html {
-  scroll-padding-top: 5rem;
   scroll-behavior: smooth;
+}
+
+@media (min-width: 640px) {
+  html {
+    scroll-padding-top: 5rem;
+  }
 }
 
 @layer base {

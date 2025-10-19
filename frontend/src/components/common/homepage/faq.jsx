@@ -25,7 +25,7 @@ const FAQ = () => {
       <div className='w-full mx-auto'>
         
         <div className='mb-8'>
-          <h3 className='text-3xl font-extrabold text-[#5B3E31] dark:text-white'>FREQUENTLY ASKED QUESTIONS (FAQs)</h3> 
+          <h3 className='text-3xl font-extrabold text-[#5B3E31] dark:text-amber-400'>FREQUENTLY ASKED QUESTIONS (FAQs)</h3> 
         </div>
 
         <div className='divide-y divide-gray-300 dark:divide-gray-700 space-y-2'> 
@@ -67,7 +67,7 @@ const FAQ = () => {
         </div>
         
         <div className='mt-8 text-center p-6 bg-gray-100 dark:bg-[#212529] rounded-xl shadow-lg'> {/* Added light bg */}
-            <p className='text-base font-medium text-[#5B3E31] dark:text-gray-200'>
+            <p className='text-base font-medium text-[#5B3E31] dark:text-amber-400 '>
                 Can't find your question? Reach out to us directly!
             </p>
         </div>

@@ -64,14 +64,11 @@ const Announcement = () => {
   return (
     <div className='w-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-20 px-4 sm:px-6 lg:px-8'>
       <div className="max-w-screen-xl mx-auto">
-        <div className="flex justify-between items-end mb-12">
+        <div className="flex justify-between items-end mb-2">
             <div>
-                <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">LATEST ANNOUNCEMENT</h2>
-                <p className="mt-2 text-lg text-gray-500 dark:text-gray-400"></p>
+                <h2 className="text-3xl font-extrabold text-[#5B3E31] dark:text-amber-400 sm:text-4xl sm:-mt-10 sm:py-9">LATEST ANNOUNCEMENT</h2>
             </div>
-            <a href="/announcements" className="hidden sm:flex items-center font-semibold text-sm text-amber-600 dark:text-amber-400 hover:underline transition-colors">
-                View All Announcements <FiArrowRight className="ml-1" />
-            </a>
+
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -102,7 +99,7 @@ const Announcement = () => {
             <div>
               <div className="hidden sm:flex items-center border-b border-gray-200 dark:border-gray-700 mb-8">
                 {categories.map(category => (
-                  <button key={category} onClick={() => setActiveFilter(category)} className="relative px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  <button key={category} onClick={() => setActiveFilter(category)} className="relative px-3 py-2 text-x font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                     {category}
                     {activeFilter === category && (<motion.div className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500" layoutId="filter-underline" />)}
                   </button>
@@ -142,7 +139,7 @@ const Announcement = () => {
             viewport={{ once: false, amount: 0.2 }}
           >
              <div className="lg:sticky top-32">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">School News</h3>
+                <h3 className="text-3xl font-bold text-[#5B3E31] dark:text-amber-400 mb-2">SCHOOL NEWS</h3>
                 <div className="flex justify-center">
                     <Carousel items={carouselNewsData} baseWidth={400} height={420} autoplay={true} autoplayDelay={3500} pauseOnHover={true} loop={true} />
                 </div>

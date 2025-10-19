@@ -32,8 +32,8 @@ const Contact = () => {
                 </div>
               </div>
 
-              <div className='w-full md:w-8/12 p-6 bg-gray-100 dark:bg-[#212529] transition-colors duration-300'> {/* Changed light mode bg to gray-100 */}
-                <h3 className='text-xl font-bold mb-6 text-gray-800 dark:text-white'>Contact Form</h3> {/* Added text-gray-800 for light mode */}
+              <div className='w-full md:w-8/12 p-6 bg-gray-100 dark:bg-[#212529] transition-colors duration-300'> 
+                <h3 className='text-xl font-bold mb-6 text-gray-800 dark:text-amber-400 '>Contact Form</h3> 
                 
                 <form onSubmit={handleSubmit} className='space-y-4'>
                   

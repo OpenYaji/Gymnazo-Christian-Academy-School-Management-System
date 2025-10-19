@@ -7,6 +7,7 @@ import Announcement from '../common/homepage/announcement/announcement'
 import Footer from '../common/homepage/footer'
 import Contact from '../common/homepage/contact'
 import FAQ from '../common/homepage/faq'
+import HelpSupport from '../modals/HelpSupport'
 
 const Homepage = () => {
   return (
@@ -23,9 +24,11 @@ const Homepage = () => {
         <section id="announcement" className="min-h-screen ">
           <Announcement />
         </section>
+        <section id="enrollment-info" className="">
+          
+        </section>
 
-        <section id="contact-us" className="grid grid-cols-1 md:grid-cols-2 gap-2 bg-white dark:bg-gray-900 transition-colors duration-300 p-4 md:p-8"
-        >
+        <section id="contact-us" className="grid grid-cols-1 md:grid-cols-2 gap-2 bg-white dark:bg-gray-900 transition-colors duration-300 p-4 md:p-8">
           <div className="col-span-1 h-full pt-10">
             <FAQ />
           </div>
@@ -33,6 +36,7 @@ const Homepage = () => {
             <Contact />
           </div>
         </section>
+        <HelpSupport />
       </main>
       <Footer />
     </>

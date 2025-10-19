@@ -9,14 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (location.pathname !== '/login') {
-      fetchCurrentUser();
-    } else {
-      setLoading(false);
-    }
-  }, [location.pathname]);
-
   const fetchCurrentUser = async () => {
     try {
       const response = await axios.get(
@@ -26,14 +18,25 @@ export const AuthProvider = ({ children }) => {
 
       if (response.data.success) {
         setUser(response.data.user);
+      } else {
+        setUser(null);
       }
-    } catch{
-      console.log("mag login ka muna boi hahahaha");
+    } catch(error) {
       setUser(null);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const publicRoutes = ['/', '/login', '/register'];
+    
+    if (!publicRoutes.includes(location.pathname)) {
+      fetchCurrentUser();
+    } else {
+      setLoading(false);
+    }
+  }, [location.pathname]);
 
   const login = async (username, password) => {
     try {

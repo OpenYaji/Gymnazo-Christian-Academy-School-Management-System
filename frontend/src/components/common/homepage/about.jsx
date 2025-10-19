@@ -24,11 +24,11 @@ const About = () => {
 
     return (
         <div className="bg-white dark:bg-gray-900 py-20 pt-24 min-h-screen transition-colors duration-300 overflow-hidden">
-            <div className="container mx-auto px-6">
+            <div className="container mx-auto px-[30px]">
                 <div className="flex flex-col md:flex-row items-center gap-10">
                     
                     <motion.div 
-                        className="w-full md:w-1/2 rounded-[50px] overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-gray-800/50"
+                        className="w-full md:w-1/2 rounded-[20px] md:rounded-[50px] overflow-hidden shadow-xl dark:shadow-2xl dark:shadow-gray-800/50 max-h-[300px] md:max-h-none"
                         variants={leftVariant}
                         initial="hidden"
                         whileInView="visible"
@@ -57,7 +57,7 @@ const About = () => {
                         whileInView="visible"
                         viewport={{ once: false, amount: 0.2 }}
                     >
-                        <h4 className="text-xl font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-10 transition-colors duration-300">
+                        <h4 className="text-xl font-semibold text-[#3a2c1c] dark:text-amber-400 uppercase tracking-widest mb-10 transition-colors duration-300">
                             ABOUT US
                         </h4>
                         <h2 className="text-4xl md:text-5xl font-extrabold leading-tight mb-4 text-[#3C2F2F] dark:text-gray-100 transition-colors duration-300">
@@ -75,13 +75,13 @@ const About = () => {
             </div>
 
             <motion.div 
-                style={{ height: '600px', position: 'relative', marginTop: '5rem' }}
+                style={{ height: '600px', position: 'relative'}}
                 variants={bottomVariant}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: false, amount: 0.1 }}
             >
-                <CircularGallery bend={0} textColor="#F4D77D" borderRadius={0.05} scrollEase={0.02} />
+                <CircularGallery bend={0} textColor="#FFCA28" borderRadius={0.05} scrollEase={0.02} />
             </motion.div>
         </div>
     );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Girl from '../../../assets/img/girl.png';
-import Bg from '../../../assets/img/bg.png';
+import Bg from '../../../assets/img/school2.png';
 import Logo from '../../../assets/img/gymnazu.png';
 import SplitText from "../../ui/SplitText";
 import ShinyText from '../../ui/ShinyText';
@@ -67,16 +67,15 @@ const Home = () => {
                             textAlign='center'
                         />
                     </h2>
-                    <p className="text-lg sm:text-xl lg:text-2xl mb-8 lg:mb-10">
                         <ShinyText
                             text="Affordable and Accessible Quality Education"
                             disabled={false}
-                            speed={3}
-                            className='custom-class'
-                        />
-                    </p>
+                            speed={6}
+                            className='text-3xl sm:text-xl lg:text-2xl mb-2 lg:mb-10'>                          
+                        </ShinyText>
+
                     <div className="flex justify-center lg:justify-start space-x-4">
-                        <StarBorder as="button" className="custom-border border-white text-white py-3 px-4 sm:px-6 text-xs sm:text-sm font-semibold hover:bg-white hover:text-black dark:hover:bg-gray-200 dark:hover:text-gray-900 transition duration-300" color="yellow" speed="2s">
+                        <StarBorder as="button" className="custom-border border-white text-white py-3 px-4 sm:px-6 text-xs sm:text-sm font-semibold hover:bg-transparent hover:text-black hover:border-white hover:scale-110 dark:hover:bg-transparent dark:hover:text-gray-900 dark:hover:border-white transition-all duration-300" color="grey" speed="5s">
                             READ MORE
                         </StarBorder>
                         <button className="bg-[#F4D77D] dark:bg-amber-500 text-black py-3 px-4 sm:px-6 text-xs sm:text-sm font-bold shadow-lg hover:bg-yellow-500 dark:hover:bg-amber-400 rounded-[20px] transition duration-300">

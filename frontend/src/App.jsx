@@ -53,7 +53,6 @@ function App() {
           </Route>
         </Routes>
         </AuthProvider>
-
       </DarkModeProvider>
       
     </BrowserRouter>

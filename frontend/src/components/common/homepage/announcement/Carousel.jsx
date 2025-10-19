@@ -44,7 +44,7 @@ export default function Carousel({
       ref={containerRef}
       onMouseEnter={() => pauseOnHover && setIsHovered(true)}
       onMouseLeave={() => pauseOnHover && setIsHovered(false)}
-      className="relative w-full max-w-lg mx-auto overflow-hidden" // Use max-w-lg for better responsive control
+      className="relative w-full max-w-lg mx-auto overflow-hidden" 
     >
       <motion.div
         drag="x"
@@ -76,7 +76,7 @@ export default function Carousel({
         ))}
       </motion.div>
 
-      <div className="absolute bottom-4 left-0 right-0">
+      <div className="absolute bottom-1 left-0 right-0">
         <div className="flex justify-center gap-2">
           {items.map((_, index) => (
             <button
