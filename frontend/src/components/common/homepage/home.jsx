@@ -25,7 +25,7 @@ const Home = () => {
     return (
         <div 
             id="home" 
-            className="relative w-full h-screen bg-cover bg-center pt-[84px] -mt-[84px] transition-colors duration-300"
+            className="relative w-full h-screen bg-cover bg-center pt-[84px] lg:-mt-[116px] transition-colors duration-300"
             style={{ backgroundImage: `url(${Bg})` }}
         >
             <div className="absolute inset-0 bg-black opacity-50 dark:opacity-70 z-0 transition-opacity duration-300"></div>

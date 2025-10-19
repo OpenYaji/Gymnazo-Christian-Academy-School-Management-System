@@ -8,6 +8,7 @@ import Footer from '../common/homepage/footer'
 import Contact from '../common/homepage/contact'
 import FAQ from '../common/homepage/faq'
 import HelpSupport from '../modals/HelpSupport'
+import ScrollUpButton from '../ui/ScrollUpButton'
 
 const Homepage = () => {
   return (
@@ -25,7 +26,7 @@ const Homepage = () => {
           <Announcement />
         </section>
         <section id="enrollment-info" className="">
-          
+
         </section>
 
         <section id="contact-us" className="grid grid-cols-1 md:grid-cols-2 gap-2 bg-white dark:bg-gray-900 transition-colors duration-300 p-4 md:p-8">
@@ -37,6 +38,7 @@ const Homepage = () => {
           </div>
         </section>
         <HelpSupport />
+        <ScrollUpButton />
       </main>
       <Footer />
     </>
