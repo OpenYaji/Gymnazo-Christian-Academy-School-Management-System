@@ -12,12 +12,16 @@ const WelcomeBanner = () => {
           <h3 className='font-medium text-stone-800 mb-2'>
             Welcome back, <span className='font-bold'>{user?.firstName || 'Student'}</span>
           </h3>
-          <h1 className='text-3xl font-extrabold text-stone-900 mb-4'>
+          <h1 className='text-4xl font-extrabold text-stone-900 '>
             GYMNAZO CHRISTIAN ACADEMY
+          </h1>
+          <h1 className='flex justify-end text-4xl font-extrabold text-[#3C2F2F] mb-4'>
+            STUDENT PORTAL 
           </h1>
           <button className='bg-[#3C2F2F] text-white px-6 py-2 rounded-lg font-semibold text-sm hover:bg-opacity-90 transition-all shadow'>
             Learn More
           </button>
+          
         </div>
         <div className='hidden md:block w-32 h-32 bg-white/50 rounded-full flex-shrink-0 flex items-center justify-center ml-8'>
           <img src={Logo} alt='Gymnazo Logo' className='w-30 h-30' />

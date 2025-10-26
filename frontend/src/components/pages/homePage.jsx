@@ -22,7 +22,7 @@ const Homepage = () => {
           <About />
         </section>
         <Update />
-        <section id="announcement" className="min-h-screen ">
+        <section id="announcement" className="min-h-screen">
           <Announcement />
         </section>
         <section id="enrollment-info" className="">

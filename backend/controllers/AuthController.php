@@ -26,7 +26,7 @@ class AuthController {
 
         if (password_verify($password, $userData['PasswordHash'])) {
             if (session_status() === PHP_SESSION_NONE) {
-                // sessiion cookie params for security hell yeah
+                // session cookie params for security hell yeah
                 session_set_cookie_params([
                     'lifetime' => 3600, // 1 hour lang to lods
                     'path' => '/',
@@ -40,9 +40,25 @@ class AuthController {
 
             session_regenerate_id(true);
             
+            // Store user data in session
             $_SESSION['user_id'] = $userData['UserID'];
             $_SESSION['full_name'] = $userData['FullName'];
             $_SESSION['user_type'] = $userData['UserType'];
+
+            // Set individual cookies for user data
+            $cookieOptions = [
+                'expires' => time() + 3600,
+                'path' => '/',
+                'domain' => '',
+                'secure' => isset($_SERVER['HTTPS']),
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ];
+
+            setcookie('user_id', $userData['UserID'], $cookieOptions);
+            setcookie('full_name', $userData['FullName'], $cookieOptions);
+            setcookie('user_type', $userData['UserType'], $cookieOptions);
+
 
 
             return [

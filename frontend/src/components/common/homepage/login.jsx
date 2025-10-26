@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Bg from '../../../assets/img/bg.png';
+import Logo from '../../../assets/img/gymnazu.png';
 import SuccessModal from "../../modals/SuccessModal";
 
 const Login = () => {
@@ -72,7 +73,7 @@ const Login = () => {
         username={loggedInUser}
       />
 
-      <div className="relative min-h-screen w-full flex items-center justify-center lg:pb-20">
+      <div className="relative h-[85.4vh] w-full flex items-center justify-center pb-6">
         
         <div 
           className="absolute inset-0 bg-cover bg-center" 
@@ -84,6 +85,11 @@ const Login = () => {
         <div className="relative z-10 w-full max-w-sm mx-4 p-8 rounded-2xl shadow-xl bg-stone-800/60 dark:bg-gray-900/70 border border-stone-700 dark:border-gray-600 backdrop-blur-sm transition-colors duration-300">
           
           <div className="flex flex-col items-center mb-6">
+            <img 
+              src={Logo} 
+              alt="School Logo" 
+              className="w-20 h-20 mb-4 object-contain"
+            />
             <h2 className="text-xl font-bold uppercase text-white tracking-wider">Student Login</h2>
           </div>
 

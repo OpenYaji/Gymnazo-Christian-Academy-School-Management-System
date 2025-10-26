@@ -92,7 +92,7 @@ const OverallPerformanceCard = () => {
                 </div>
                 <div className="text-right">
                     <span className="text-sm text-gray-500 dark:text-gray-400">
-                        S.Y. {user.schoolYear}
+                        {user.schoolYear}
                     </span>
                 </div>
             </div>

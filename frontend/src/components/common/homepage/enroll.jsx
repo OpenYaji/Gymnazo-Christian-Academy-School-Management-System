@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Bg from '../../../assets/img/bg.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const API_URL = 'http://localhost/Gymazo-Student-Side/backend/api/admission.php';
 
@@ -80,11 +80,51 @@ const SuccessModal = ({ isOpen, trackingNumber, onClose }) => {
     );
 };
 
+const ConfirmBackModal = ({ isOpen, onConfirm, onCancel }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+            <div className="bg-stone-800/95 dark:bg-gray-900/95 text-white p-6 sm:p-8 rounded-lg w-full max-w-md shadow-2xl backdrop-blur-sm border border-stone-700 dark:border-gray-600">
+                <div className="text-center">
+                    <div className="mb-4">
+                        <svg className="w-16 h-16 text-yellow-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <h2 className="text-2xl font-bold text-[#F4D77D] mb-4">
+                        Unsaved Changes
+                    </h2>
+                    <p className="text-sm mb-6">
+                        You have filled in some information. Are you sure you want to go back? All unsaved data will be lost.
+                    </p>
+                    <div className="flex gap-3 justify-center">
+                        <button 
+                            onClick={onCancel}
+                            className="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded-lg transition duration-200"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            onClick={onConfirm}
+                            className="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-6 rounded-lg transition duration-200"
+                        >
+                            Go Back to Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const Enroll = () => {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [hasAgreed, setHasAgreed] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [successModalOpen, setSuccessModalOpen] = useState(false);
+    const [confirmBackModalOpen, setConfirmBackModalOpen] = useState(false);
     const [trackingNumber, setTrackingNumber] = useState('');
     const [formData, setFormData] = useState({
         enrolleeType: '',
@@ -108,6 +148,24 @@ const Enroll = () => {
         "Pre-Elem", "Kinder", "Grade 1", "Grade 2", "Grade 3",
         "Grade 4", "Grade 5", "Grade 6"
     ];
+
+    const hasFormData = () => {
+        return Object.values(formData).some(value => value !== '');
+    };
+
+    const handleBackClick = (e) => {
+        e.preventDefault();
+        if (hasFormData()) {
+            setConfirmBackModalOpen(true);
+        } else {
+            navigate('/');
+        }
+    };
+
+    const handleConfirmBack = () => {
+        setConfirmBackModalOpen(false);
+        navigate('/');
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -136,7 +194,6 @@ const Enroll = () => {
 
             submitData.append('privacyAgreement', 'agreed');
 
-            // Submit to backend
             const response = await fetch(`${API_URL}?action=submit`, {
                 method: 'POST',
                 body: submitData
@@ -178,12 +235,17 @@ const Enroll = () => {
     };
 
     return (
-        <div className="relative w-full min-h-screen flex flex-col items-center justify-center py-8 px-4 sm:px-6">
+        <div className="relative w-full min-h-screen flex flex-col items-center justify-center py-2 px-4 sm:px-6">
             <PrivacyModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
             <SuccessModal 
                 isOpen={successModalOpen} 
                 trackingNumber={trackingNumber}
                 onClose={() => setSuccessModalOpen(false)}
+            />
+            <ConfirmBackModal 
+                isOpen={confirmBackModalOpen}
+                onConfirm={handleConfirmBack}
+                onCancel={() => setConfirmBackModalOpen(false)}
             />
             
             <div 
@@ -192,43 +254,52 @@ const Enroll = () => {
             ></div>
             <div className="absolute inset-0 bg-stone-900/60 dark:bg-black/70 transition-colors duration-300"></div>
 
-            <div className="relative z-10 w-full max-w-5xl">
+            <div className="relative z-10 w-full max-w-7xl">
                 <div className='relative top-0 left-0 w-full mb-2 z-10 transition-all duration-300'>
                     <div className='w-full flex justify-start'>
-                        <Link 
-                            to="/" 
+                        <button 
+                            onClick={handleBackClick}
                             className='flex items-center gap-2 text-white dark:text-amber-400 font-bold hover:text-white dark:hover:text-amber-300 transition duration-150 text-sm px-4 group'
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                             </svg>
                             <span className='inline'>Back to Home</span>
-                        </Link>
+                        </button>
                     </div>
                 </div>
 
                 <form className="relative" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-5 gap-4 auto-rows-fr">
-                        <div className="col-span-5 lg:col-span-2 space-y-4 p-4 rounded-lg backdrop-blur-sm bg-stone-800/60 dark:bg-gray-900/70 shadow-xl border border-stone-700 dark:border-gray-600 transition-colors duration-300">
-                            <h2 className="text-lg font-bold text-white border-b border-white/40 dark:border-gray-600 pb-1 mb-2 transition-colors duration-300">
+                        <div className="col-span-5 lg:col-span-2 space-y-4 p-6 rounded-lg backdrop-blur-sm bg-stone-800/60 dark:bg-gray-900/70 shadow-xl border border-stone-700 dark:border-gray-600 transition-colors duration-300">
+                            <h2 className="text-xl font-bold text-white border-b border-white/40 dark:border-gray-600 pb-2 mb-3 transition-colors duration-300">
                                 Student Information
                             </h2>
 
-                            <div className="space-y-1">
-                                <label htmlFor="enrolleeType" className="sr-only">Enrollee Type</label>
+                            <div className="space-y-1 relative">
                                 <select 
                                     id="enrolleeType" 
                                     name="enrolleeType"
                                     value={formData.enrolleeType}
                                     onChange={handleInputChange}
                                     required
-                                    className="w-full h-8 px-3 bg-white/90 dark:bg-gray-700 dark:text-gray-100 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-amber-400 focus:border-amber-400 text-sm transition-colors duration-300"
+                                    className="w-full h-12 pt-4 pb-1 px-3 bg-white/90 dark:bg-gray-700 dark:text-gray-100 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-base transition-colors duration-300 peer"
                                 >
-                                    <option value="">Select Enrollee Type</option>
+                                    <option value=""></option>
                                     <option value="returnee">Returnee</option>
                                     <option value="new">New Enrollee</option>
                                     <option value="transferee">Transferee</option>
                                 </select>
+                                <label 
+                                    htmlFor="enrolleeType" 
+                                    className={`absolute left-3 transition-all duration-200 pointer-events-none ${
+                                        formData.enrolleeType 
+                                            ? 'top-1 text-xs text-amber-400 dark:text-amber-400' 
+                                            : 'top-3 text-base text-gray-500 dark:text-gray-400'
+                                    }`}
+                                >
+                                    Enrollee Type
+                                </label>
                             </div>
                             
                             <div className="flex space-x-2">
@@ -263,9 +334,9 @@ const Enroll = () => {
                                     className="flex-1" 
                                 />
                                 <div className="flex-1 min-w-[120px]">
-                                    <label className="sr-only">Gender</label>
-                                    <div className="flex items-center space-x-2 h-8 text-sm">
-                                        <label className="flex items-center space-x-1 text-white">
+                                    <label className="block text-sm font-medium text-white mb-2">Gender</label>
+                                    <div className="flex items-center space-x-3 h-10 text-base">
+                                        <label className="flex items-center space-x-1.5 text-white">
                                             <input 
                                                 type="radio" 
                                                 name="gender" 
@@ -273,11 +344,11 @@ const Enroll = () => {
                                                 checked={formData.gender === 'male'}
                                                 onChange={handleInputChange}
                                                 required
-                                                className="h-3 w-3 text-amber-400" 
+                                                className="h-4 w-4 text-amber-400" 
                                             />
                                             <span>Male</span>
                                         </label>
-                                        <label className="flex items-center space-x-1 text-white">
+                                        <label className="flex items-center space-x-1.5 text-white">
                                             <input 
                                                 type="radio" 
                                                 name="gender" 
@@ -285,7 +356,7 @@ const Enroll = () => {
                                                 checked={formData.gender === 'female'}
                                                 onChange={handleInputChange}
                                                 required
-                                                className="h-3 w-3 text-amber-400" 
+                                                className="h-4 w-4 text-amber-400" 
                                             />
                                             <span>Female</span>
                                         </label>
@@ -322,14 +393,14 @@ const Enroll = () => {
                                 />
                             </div>
 
-                            <div className="pt-2 text-[10px] font-medium text-white leading-tight">
-                                <p className="mb-0.5">
+                            <div className="pt-3 text-xs font-medium text-white leading-tight">
+                                <p className="mb-1">
                                     <span className='font-bold text-amber-400'>For Old Students:</span> Report Card (No failing grades)
                                 </p>
-                                <p className="mb-0.5">
+                                <p className="mb-1">
                                     <span className='font-bold text-amber-400'>For Transferees:</span>
                                 </p>
-                                <ul className="list-disc list-inside ml-2 space-y-0 text-[9px]">
+                                <ul className="list-disc list-inside ml-2 space-y-0.5 text-[10px]">
                                     <li>Good Moral Certificate</li>
                                     <li>Birth Certificate (PSA)</li>
                                     <li>Certificate of Completion</li>
@@ -339,8 +410,8 @@ const Enroll = () => {
                         </div>
 
                         <div className="col-span-5 lg:col-span-3 lg:col-start-3 space-y-4">
-                            <div className="space-y-4 p-4 rounded-lg backdrop-blur-sm bg-stone-800/60 dark:bg-gray-900/70 shadow-xl border border-stone-700 dark:border-gray-600 transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-white border-b border-white/40 dark:border-gray-600 pb-1 mb-2 transition-colors duration-300">
+                            <div className="space-y-4 p-6 rounded-lg backdrop-blur-sm bg-stone-800/60 dark:bg-gray-900/70 shadow-xl border border-stone-700 dark:border-gray-600 transition-colors duration-300">
+                                <h2 className="text-xl font-bold text-white border-b border-white/40 dark:border-gray-600 pb-2 mb-3 transition-colors duration-300">
                                     Parent/Guardian Information
                                 </h2>
                                 
@@ -394,26 +465,35 @@ const Enroll = () => {
                                 />
                             </div>
 
-                            <div className="space-y-4 p-4 rounded-lg backdrop-blur-sm bg-stone-800/60 dark:bg-gray-900/70 shadow-xl border border-stone-700 dark:border-gray-600 transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-white border-b border-white/40 dark:border-gray-600 pb-1 mb-2 transition-colors duration-300">
+                            <div className="space-y-4 p-6 rounded-lg backdrop-blur-sm bg-stone-800/60 dark:bg-gray-900/70 shadow-xl border border-stone-700 dark:border-gray-600 transition-colors duration-300">
+                                <h2 className="text-xl font-bold text-white border-b border-white/40 dark:border-gray-600 pb-2 mb-3 transition-colors duration-300">
                                     Academic Information
                                 </h2>
                                 <div className="flex space-x-2">
-                                    <div className="flex-1">
-                                        <label htmlFor="gradeLevel" className="sr-only">Grade Level Applying for</label>
+                                    <div className="flex-1 relative">
                                         <select 
                                             id="gradeLevel" 
                                             name="gradeLevel"
                                             value={formData.gradeLevel}
                                             onChange={handleInputChange}
                                             required
-                                            className="w-full h-8 px-3 bg-white/90 dark:bg-gray-700 dark:text-gray-100 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-amber-400 focus:border-amber-400 text-sm placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
+                                            className="w-full h-12 pt-4 pb-1 px-3 bg-white/90 dark:bg-gray-700 dark:text-gray-100 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-base transition-colors duration-300"
                                         >
-                                            <option value="">Grade Level Applying for</option>
+                                            <option value=""></option>
                                             {gradeLevels.map(level => (
                                                 <option key={level} value={level.toLowerCase().replace(' ', '')}>{level}</option>
                                             ))}
                                         </select>
+                                        <label 
+                                            htmlFor="gradeLevel" 
+                                            className={`absolute left-3 transition-all duration-200 pointer-events-none ${
+                                                formData.gradeLevel 
+                                                    ? 'top-1 text-xs text-amber-400 dark:text-amber-400' 
+                                                    : 'top-3 text-base text-gray-500 dark:text-gray-400'
+                                            }`}
+                                        >
+                                            Grade Level Applying for
+                                        </label>
                                     </div>
                                     <Input 
                                         label="Previous School (if applicable)" 
@@ -426,7 +506,7 @@ const Enroll = () => {
                                 </div>
                             </div>
                             
-                            <div className="p-4 rounded-lg backdrop-blur-sm bg-stone-800/60 dark:bg-gray-900/70 shadow-xl border border-stone-700 dark:border-gray-600 text-sm text-white space-y-3 transition-colors duration-300">
+                            <div className="p-6 rounded-lg backdrop-blur-sm bg-stone-800/60 dark:bg-gray-900/70 shadow-xl border border-stone-700 dark:border-gray-600 text-sm text-white space-y-3 transition-colors duration-300">
                                 <div className="flex items-start space-x-2">
                                     <input 
                                         id="privacyAgreement" 
@@ -437,7 +517,7 @@ const Enroll = () => {
                                         required
                                         className="mt-1 h-4 w-4 text-amber-400 border-gray-300 rounded focus:ring-amber-400 bg-white"
                                     />
-                                    <label htmlFor="privacyAgreement" className="text-sm font-medium">
+                                    <label htmlFor="privacyAgreement" className="text-base font-medium">
                                         I have read and agree to the 
                                         <button 
                                             type="button" 
@@ -452,11 +532,11 @@ const Enroll = () => {
                         </div>
                     </div>
                     
-                    <div className="flex justify-center pt-6">
+                    <div className="flex justify-center pt-1">
                         <button 
                             type="submit"
                             disabled={isSubmitting}
-                            className={`bg-[#F4D77D] dark:bg-amber-500 hover:bg-amber-300 dark:hover:bg-amber-400 text-black font-extrabold py-2 px-10 border-2 border-[#5B3E31] dark:border-amber-600 rounded-lg shadow-3xl text-base transition duration-200 uppercase ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`bg-[#F4D77D] dark:bg-amber-500 hover:bg-amber-300 dark:hover:bg-amber-400 text-black font-extrabold py-2 px-8 border-1 border-[#5B3E31] dark:border-amber-600 rounded-lg shadow-3xl text-base transition duration-200 uppercase ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {isSubmitting ? 'SUBMITTING...' : 'SUBMIT'}
                         </button>
@@ -472,20 +552,34 @@ const Enroll = () => {
     );
 };
 
-const Input = ({ label, name, type, value, onChange, required = false, className = '' }) => (
-    <div className={className}>
-        <label htmlFor={name} className="sr-only">{label}</label>
-        <input 
-            id={name} 
-            name={name} 
-            type={type}
-            value={value}
-            onChange={onChange}
-            required={required}
-            placeholder={label} 
-            className="w-full h-8 px-3 bg-white/90 dark:bg-gray-700 dark:text-gray-100 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-amber-400 focus:border-amber-400 text-sm placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-300"
-        />
-    </div>
-);
+const Input = ({ label, name, type, value, onChange, required = false, className = '' }) => {
+    const isDate = type === 'date';
+    const hasValue = value || isDate;
+
+    return (
+        <div className={`relative ${className}`}>
+            <input 
+                id={name} 
+                name={name} 
+                type={type}
+                value={value}
+                onChange={onChange}
+                required={required}
+                placeholder=" "
+                className="w-full h-12 pt-4 pb-1 px-3 bg-white/90 dark:bg-gray-700 dark:text-gray-100 text-gray-900 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400 text-base transition-colors duration-300 peer"
+            />
+            <label 
+                htmlFor={name} 
+                className={`absolute left-3 transition-all duration-200 pointer-events-none ${
+                    hasValue 
+                        ? 'top-1 text-xs text-amber-400 dark:text-amber-400' 
+                        : 'top-3 text-base text-gray-500 dark:text-gray-400 peer-focus:top-1 peer-focus:text-xs peer-focus:text-amber-400'
+                }`}
+            >
+                {label}
+            </label>
+        </div>
+    );
+};
 
 export default Enroll;

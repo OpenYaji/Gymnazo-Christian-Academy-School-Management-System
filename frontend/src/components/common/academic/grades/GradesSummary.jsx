@@ -8,29 +8,46 @@ const SummaryCard = ({ title, value, icon, unit = '' }) => (
     </div>
     <div>
       <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
-      <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">{value}{unit}</p>
+      <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+        {value === 'N/A' ? value : `${value}${unit}`}
+      </p>
     </div>
   </div>
 );
 
-const GradesSummary = ({ data }) => {
+const GradesSummary = ({ data, subjects }) => {
+  // Check if all subjects have complete grades (all 4 quarters)
+  const allGradesComplete = subjects && subjects.every(subject =>
+    subject.q1 && subject.q2 && subject.q3 && subject.q4
+  );
+
+  // Calculate general average only if all grades are complete
+  const displayGeneralAverage = allGradesComplete && data.generalAverage > 0
+    ? data.generalAverage
+    : 'N/A';
+
+  // Academic standing should also be N/A if grades are incomplete
+  const displayAcademicStanding = allGradesComplete
+    ? data.academicStanding
+    : 'In Progress';
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <SummaryCard 
-        title="General Average" 
-        value={data.generalAverage} 
-        icon={<TrendingUp size={24} />} 
+      <SummaryCard
+        title="General Average"
+        value={displayGeneralAverage}
+        icon={<TrendingUp size={24} />}
       />
-      <SummaryCard 
-        title="Attendance Rate" 
-        value={data.attendanceRate} 
-        unit="%" 
-        icon={<Percent size={24} />} 
+      <SummaryCard
+        title="Attendance Rate"
+        value={data.attendanceRate}
+        unit="%"
+        icon={<Percent size={24} />}
       />
-      <SummaryCard 
-        title="Academic Standing" 
-        value={data.academicStanding} 
-        icon={<Award size={24} />} 
+      <SummaryCard
+        title="Academic Standing"
+        value={displayAcademicStanding}
+        icon={<Award size={24} />}
       />
     </div>
   );

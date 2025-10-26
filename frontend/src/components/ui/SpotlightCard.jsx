@@ -4,7 +4,7 @@ const SpotlightCard = ({
   children, 
   className = '', 
   spotlightColor = 'rgba(243, 255, 124, 0.8)',
-  darkSpotlightColor = 'rgba(251, 191, 36, 0.6)' // amber color for dark mode
+  darkSpotlightColor = 'rgba(251, 191, 36, 0.6)'
 }) => {
   const divRef = useRef(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -55,7 +55,7 @@ const SpotlightCard = ({
       onBlur={handleBlur}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative rounded-3xl border border-[#F4D77D] dark:border-amber-600 bg-[#F4D77D] dark:bg-gray-800 overflow-hidden p-5 transition-colors duration-300 ${className}`}
+      className={`relative rounded-3xl border border-[#F4D77D] dark:border-gray-800 bg-[#F4D77D] dark:bg-gray-800 overflow-hidden p-5 transition-colors duration-300 ${className}`}
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out"

@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import TeamImage from '../../../assets/img/aboutus.jpg';
-import PixelTransition from '../../ui/PixelTransition';
+import TeamImage from '../../../assets/img/team.png';
 import GlareHover from '../../ui/GlareHover';
 import CircularGallery from '../../ui/CircularGallery';
 

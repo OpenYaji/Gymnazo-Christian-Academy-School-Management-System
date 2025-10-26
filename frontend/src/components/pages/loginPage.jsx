@@ -6,12 +6,11 @@ const LoginPage = () => {
   return (
     <>
       <Header />
-      <main className=' min-h-screen'>
+      <main className=''>
         <section id="home">
           <Login />
         </section>
       </main>
-      <Footer />
     </>
 
   )

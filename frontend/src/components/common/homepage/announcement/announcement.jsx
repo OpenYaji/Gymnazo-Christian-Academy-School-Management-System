@@ -62,50 +62,33 @@ const Announcement = () => {
   };
 
   return (
-    <div className='w-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-20 px-4 sm:px-6 lg:px-8'>
+    <div className='w-full bg-gray-50 dark:bg-gray-900 transition-colors duration-300 py-12 px-4 sm:px-6 lg:px-8'>
       <div className="max-w-screen-xl mx-auto">
         <div className="flex justify-between items-end mb-2">
             <div>
-                <h2 className="text-3xl font-extrabold text-[#5B3E31] dark:text-amber-400 sm:text-4xl sm:-mt-10 sm:py-9">LATEST ANNOUNCEMENT</h2>
+                <h2 className="text-2xl font-extrabold text-[#5B3E31] dark:text-amber-400 sm:text-3xl">LATEST ANNOUNCEMENT</h2>
             </div>
-
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <motion.div 
-            className="lg:col-span-2 space-y-12"
+            className="lg:col-span-2 space-y-8"
             variants={leftVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, amount: 0.2 }}
           >
-            {pinnedAnnouncement && (
-              <div onClick={() => setSelectedAnnouncement(pinnedAnnouncement)} className="group cursor-pointer rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800">
-                <div className="relative">
-                    <img className="w-full h-64 sm:h-80 object-cover transition-transform duration-300 group-hover:scale-105" src={pinnedAnnouncement.imageUrl} alt={pinnedAnnouncement.title} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                    <div className="absolute bottom-0 left-0 p-6">
-                        <span className="inline-block bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-2">IMPORTANT</span>
-                        <h3 className="text-2xl sm:text-3xl font-bold text-white leading-tight">{pinnedAnnouncement.title}</h3>
-                    </div>
-                </div>
-                <div className="p-6">
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">{pinnedAnnouncement.summary}</p>
-                  <span className="font-semibold text-amber-600 dark:text-amber-400 flex items-center group-hover:underline">Read More <FiArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" /></span>
-                </div>
-              </div>
-            )}
             
             <div>
-              <div className="hidden sm:flex items-center border-b border-gray-200 dark:border-gray-700 mb-8">
+              <div className="hidden sm:flex items-center border-b border-gray-200 dark:border-gray-700 mb-6">
                 {categories.map(category => (
-                  <button key={category} onClick={() => setActiveFilter(category)} className="relative px-3 py-2 text-x font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  <button key={category} onClick={() => setActiveFilter(category)} className="relative px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                     {category}
                     {activeFilter === category && (<motion.div className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-500" layoutId="filter-underline" />)}
                   </button>
                 ))}
               </div>
-              <div className="sm:hidden mb-6">
+              <div className="sm:hidden mb-4">
                 <select 
                   onChange={(e) => setActiveFilter(e.target.value)} 
                   value={activeFilter}
@@ -115,14 +98,14 @@ const Announcement = () => {
                 </select>
               </div>
               
-              <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <AnimatePresence>
                 {filteredAnnouncements.map(item => (
                   <motion.div key={item.id} layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }} onClick={() => setSelectedAnnouncement(item)} className="group cursor-pointer bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                    <div className="relative h-48 overflow-hidden"><img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" /></div>
-                    <div className="p-5">
+                    <div className="relative h-40 overflow-hidden"><img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" /></div>
+                    <div className="p-4">
                       <p className="text-xs text-amber-600 dark:text-amber-400 font-semibold mb-1">{item.category}</p>
-                      <h5 className="text-lg font-bold text-gray-900 dark:text-white mb-2 truncate group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">{item.title}</h5>
+                      <h5 className="text-base font-bold text-gray-900 dark:text-white mb-2 truncate group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">{item.title}</h5>
                     </div>
                   </motion.div>
                 ))}
@@ -132,16 +115,16 @@ const Announcement = () => {
           </motion.div>
           
           <motion.div 
-            className="lg:col-span-1"
+            className="lg:col-span-1 order-first lg:order-last"
             variants={rightVariant}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: false, amount: 0.2 }}
           >
-             <div className="lg:sticky top-32">
-                <h3 className="text-3xl font-bold text-[#5B3E31] dark:text-amber-400 mb-2">SCHOOL NEWS</h3>
+             <div className="lg:sticky top-24">
+                <h3 className="text-2xl font-bold text-[#5B3E31] dark:text-amber-400 mb-3">SCHOOL NEWS</h3>
                 <div className="flex justify-center">
-                    <Carousel items={carouselNewsData} baseWidth={400} height={420} autoplay={true} autoplayDelay={3500} pauseOnHover={true} loop={true} />
+                    <Carousel items={carouselNewsData} baseWidth={350} height={380} autoplay={true} autoplayDelay={3500} pauseOnHover={true} loop={true} />
                 </div>
             </div>
           </motion.div>

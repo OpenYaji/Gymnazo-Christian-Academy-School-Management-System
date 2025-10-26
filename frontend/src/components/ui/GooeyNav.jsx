@@ -188,7 +188,7 @@ const GooeyNav = ({
                 transform: scale(0);
                 opacity: 0;
                 z-index: -1;
-                border-radius: 5px;
+                border-radius: 12px;
             }
             .effect.active::after {
                 animation: pill 0.3s ease both;

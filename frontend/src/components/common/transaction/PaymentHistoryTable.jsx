@@ -51,7 +51,7 @@ const PaymentHistoryTable = ({ history }) => {
                   </td>
                   <td className="p-3 text-gray-600 dark:text-gray-400">{item.method}</td>
                   <td className="p-3 text-gray-600 dark:text-gray-400">{formatDate(item.dateTime)}</td>
-                  <td className="p-3 text-gray-600 dark:text-gray-400">₱ {parseFloat(item.cost).toLocaleString()}</td>
+                  <td className="p-3 text-gray-600 dark:text-gray-400">₱ {parseFloat(item.cost).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td className="p-3 text-right">
                     <span className={`px-3 py-1 text-xs font-bold rounded-full ${statusColors[item.status] || 'bg-gray-100 text-gray-700'}`}>
                       {item.status}

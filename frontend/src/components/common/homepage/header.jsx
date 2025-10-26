@@ -107,9 +107,11 @@ const Header = () => {
             <svg className={`absolute w-4 h-4 text-orange-500 transition-all duration-300 ${isDarkMode ? 'opacity-0 rotate-90 scale-0' : 'opacity-100 rotate-0 scale-100'}`} fill="currentColor" viewBox="0 0 24 24"><path d="M12,17c-2.76,0-5-2.24-5-5s2.24-5,5-5,5,2.24,5,5-2.24,5-5,5ZM13,0h-2V5h2V0Zm0,19h-2v5h2v-5ZM5,11H0v2H5v-2Zm19,0h-5v2h5v-2Zm-2.81-6.78l-1.41-1.41-3.54,3.54,1.41,1.41,3.54-3.54ZM7.76,17.66l-1.41-1.41-3.54,3.54,1.41,1.41,3.54-3.54Zm0-11.31l-3.54-3.54-1.41,1.41,3.54,3.54,1.41-1.41Zm13.44,13.44l-3.54-3.54-1.41,1.41,3.54,3.54,1.41-1.41Z" /></svg>
             <svg className={`absolute w-4 h-4 text-amber-400 transition-all duration-300 ${isDarkMode ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-90 scale-0'}`} fill="currentColor" viewBox="0 0 24 24"><path d="M12.009,24A12.067,12.067,0,0,1,.075,10.725,12.121,12.121,0,0,1,10.1.152a13,13,0,0,1,5.03.206,2.5,2.5,0,0,1,1.8,1.8,2.47,2.47,0,0,1-.7,2.425c-4.559,4.168-4.165,10.645.807,14.412h0a2.5,2.5,0,0,1-.7,4.319A13.875,13.875,0,0,1,12.009,24Zm.074-22a10.776,10.776,0,0,0-1.675.127,10.1,10.1,0,0,0-8.344,8.8A9.928,9.928,0,0,0,4.581,18.7a10.473,10.473,0,0,0,11.093,2.734.5.5,0,0,0,.138-.856h0C9.883,16.1,9.417,8.087,14.865,3.124a.459.459,0,0,0,.127-.465.491.491,0,0,0-.356-.362A10.68,10.68,0,0,0,12.083,2Z" /></svg>
           </button>
+          <Link to="/login">
           <button className={`lg:backdrop-blur-sm ${textColorClasses} lg:mr-10 font-bold py-1.5 px-3 sm:py-2 sm:px-4 border-2 rounded-full shadow-lg text-xs sm:text-base transition-all duration-300 ${loginButtonClasses}`}>
-            <Link to="/login">LOGIN</Link>
+            LOGIN
           </button>
+          </Link>
           {/* pag smaller screen to */}
           <button onClick={toggleMenu} className='lg:hidden flex flex-col justify-center items-center w-8 h-8 sm:mr-4' aria-label="Toggle menu">
             <span className={`bg-[#5B3E31] dark:bg-amber-400 h-0.5 w-6 rounded transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>

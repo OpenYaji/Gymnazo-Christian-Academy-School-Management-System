@@ -23,13 +23,18 @@ const ProfileHeader = ({ user }) => {
             />
             <div className="ml-4 mb-4 sm:mb-2">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{user.fullName}</h2>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                <span className="text-green-400 text-xl dark:text-green-500">•</span>
+                <p className=" bg-yellow-300 dark:bg-yellow-300 rounded-xl text-sm p-1 font-normal text-black dark:text-black">{user.role || 'Student'}</p>
+              </div>
             </div>
+            
           </div>
 
           <div className="mt-4 sm:mt-0">
             <button className="text-sm font-semibold border border-gray-200 dark:border-slate-600 px-4 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
-              Change Password
+              Change Profile
             </button>
           </div>
         </div>

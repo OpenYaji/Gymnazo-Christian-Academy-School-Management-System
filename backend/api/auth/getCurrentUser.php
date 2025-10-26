@@ -3,8 +3,7 @@
 session_start();
 
 require_once __DIR__ . '/../../config/cors.php';
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../models/User.php';
+require_once __DIR__ . '/../../controllers/UserController.php';
 
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -14,74 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit();
 }
 
-if (!isset($_SESSION['user_id'])) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Not authenticated. Please log in.']);
-    exit();
-}
+$controller = new UserController();
+$controller->getCurrentUser();
 
-$database = new Database();
-$db = $database->getConnection();
-
-if (!$db) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Database connection failed.']);
-    exit();
-}
-
-$user = new User($db);
-
-$userData = $user->getStudentByUserId($_SESSION['user_id']);
-
-if (!$userData) {
-    http_response_code(404);
-    echo json_encode(['success' => false, 'message' => 'User data not found.']);
-    exit();
-}
-
-http_response_code(200);
-echo json_encode([
-    'success' => true,
-    'user' => [
-        'userId' => $userData['UserID'],
-        'emailAddress' => $userData['EmailAddress'],
-        'userType' => $userData['UserType'],
-        'accountStatus' => $userData['AccountStatus'],
-        'lastLoginDate' => $userData['LastLoginDate'],
-        'profileId' => $userData['ProfileID'],
-        'firstName' => $userData['FirstName'],
-        'lastName' => $userData['LastName'],
-        'middleName' => $userData['MiddleName'],
-        'fullName' => $userData['FullName'],
-        'phoneNumber' => $userData['PhoneNumber'],
-        'address' => $userData['Address'],
-        'profilePictureURL' => $userData['ProfilePictureURL'],
-        'studentProfileId' => $userData['StudentProfileID'],
-        'studentNumber' => $userData['StudentNumber'],
-        'qrCodeId' => $userData['QRCodeID'],
-        'dateOfBirth' => $userData['DateOfBirth'],
-        'gender' => $userData['Gender'],
-        'nationality' => $userData['Nationality'],
-        'studentStatus' => $userData['StudentStatus'],
-        'age' => $userData['Age'],
-        'schoolYear' => $userData['SchoolYear'],
-        'schoolYearId' => $userData['SchoolYearID'],
-        'gradeLevel' => $userData['GradeLevel'],
-        'sectionName' => $userData['SectionName'],
-        'sectionId' => $userData['SectionID'],
-        'gradeAndSection' => $userData['GradeAndSection'],
-        'adviserName' => $userData['AdviserName'],
-        'weight' => $userData['Weight'],
-        'height' => $userData['Height'],
-        'allergies' => $userData['Allergies'],
-        'medicalConditions' => $userData['MedicalConditions'],
-        'medications' => $userData['Medications'],
-        'emergencyContactPerson' => $userData['EmergencyContactPerson'],
-        'emergencyContactNumber' => $userData['EmergencyContactNumber'],
-        'primaryGuardianName' => $userData['PrimaryGuardianName'],
-        'primaryGuardianRelationship' => $userData['PrimaryGuardianRelationship'],
-        'primaryGuardianContactNumber' => $userData['PrimaryGuardianContactNumber'],
-        'primaryGuardianEmail' => $userData['PrimaryGuardianEmail']
-    ]
-]);
 ?>

@@ -68,7 +68,7 @@ const QuickAccessGrid = () => {
       title: 'Pay Tuition', 
       subtitle: 'View Balance',
       tooltipText: 'Go to Payment Portal',
-      path: '/student-dashboard/pay-tuiton'
+      path: '/student-dashboard/transaction/payment-portal'
     },
     { 
       icon: <Library size={20} />, 

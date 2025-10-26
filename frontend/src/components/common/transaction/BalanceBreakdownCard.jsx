@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const BalanceBreakdownCard = ({ breakdownData }) => {
   const {
     breakdownItems = [],
@@ -59,12 +59,14 @@ const BalanceBreakdownCard = ({ breakdownData }) => {
       </div>
 
       <div className="relative group mt-4">
+      <Link to='payment-portal'>
         <button 
           className="w-full bg-[#F3D67D] text-stone-900 font-bold py-3 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed" 
           disabled={!hasBalance}
         >
-          Pay Now
+         Pay Now
         </button>
+        </Link>
         <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 bg-gray-900 text-white text-xs font-bold rounded-md px-2 py-1 opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-in-out whitespace-nowrap z-10">
           Proceed to Payment Portal
         </span>

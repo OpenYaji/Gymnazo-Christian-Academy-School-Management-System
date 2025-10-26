@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const publicRoutes = ['/', '/login', '/register'];
+    const publicRoutes = ['/', '/login'];
     
     if (!publicRoutes.includes(location.pathname)) {
       fetchCurrentUser();
