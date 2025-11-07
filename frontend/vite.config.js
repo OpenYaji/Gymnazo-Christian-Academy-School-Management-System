@@ -3,10 +3,16 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-
-  server:{
+  server: {
     host: true,
     port: 5173,
+    
+    proxy: {
+      '/backend': {
+        target: 'http://localhost/Gymazo-Student-Side', 
+        changeOrigin: true,
+      },
+    },
   },
 
   plugins: [react()],

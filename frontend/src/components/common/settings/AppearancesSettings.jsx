@@ -50,8 +50,8 @@ const AppearancesSettings = () => {
               <button
                 onClick={() => handleThemeSelect(themeOption.id)}
                 className={`w-full h-24 rounded-lg transition-all ${themeOption.previewClass} ${selectedTheme === themeOption.id
-                    ? 'ring-2 ring-amber-500 ring-offset-2 dark:ring-offset-slate-800'
-                    : ''
+                  ? 'ring-2 ring-amber-500 ring-offset-2 dark:ring-offset-slate-800'
+                  : ''
                   } flex items-center justify-center`}
               >
                 {selectedTheme === themeOption.id && (
@@ -88,8 +88,8 @@ const AppearancesSettings = () => {
               <button
                 onClick={() => handleAccentSelect(color.id)}
                 className={`w-10 h-10 rounded-full transition-all ${color.className} ${selectedAccent === color.id
-                    ? 'ring-2 ring-offset-2 dark:ring-offset-slate-800 ring-gray-800 dark:ring-gray-200'
-                    : ''
+                  ? 'ring-2 ring-offset-2 dark:ring-offset-slate-800 ring-gray-800 dark:ring-gray-200'
+                  : ''
                   } flex items-center justify-center`}
               >
                 {selectedAccent === color.id && (

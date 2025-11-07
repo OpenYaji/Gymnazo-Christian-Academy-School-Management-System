@@ -13,7 +13,7 @@ const ProtectedRouteDashboard = ({ children }) => {
       </div>
     );
   }
-  
+
   if (!user) {
     // if walang nadetect na user or hindi nag log in, automatic maredirect sya to login page
     return <Navigate to="/" state={{ from: location }} replace />;

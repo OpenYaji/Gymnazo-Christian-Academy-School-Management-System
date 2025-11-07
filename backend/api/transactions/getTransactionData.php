@@ -2,7 +2,6 @@
 
 session_start();
 
-require_once __DIR__ . '/../../config/cors.php';
 require_once __DIR__ . '/../../controllers/TransactionController.php';
 
 header("Content-Type: application/json; charset=UTF-8");

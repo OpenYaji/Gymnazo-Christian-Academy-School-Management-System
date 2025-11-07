@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuth } from '../../context/AuthContext'; 
+import { useAuth } from '../../context/AuthContext';
 import ProfileHeader from '../common/account/ProfileHeader';
 import PersonalInfo from '../common/account/PersonalInfo';
 import ParentGuardianInfo from '../common/account/ParentGuardianInfo';

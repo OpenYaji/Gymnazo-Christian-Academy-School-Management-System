@@ -1,13 +1,16 @@
 <?php
 
-class User {
+class User
+{
     private $conn;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
-    public function getStudentByStudentNumber($studentNumber) {
+    public function getStudentByStudentNumber($studentNumber)
+    {
         $query = "
             SELECT 
                 u.UserID,
@@ -39,7 +42,8 @@ class User {
     }
 
 
-    public function getStudentByUserId($userId) {
+    public function getStudentByUserId($userId)
+    {
         $query = "
             SELECT 
                 u.UserID, u.EmailAddress, u.UserType, u.AccountStatus, u.LastLoginDate,
@@ -105,5 +109,99 @@ class User {
             return false;
         }
     }
+
+    public function findByStudentNumberOrEmail($identifier)
+    {
+        $query = "
+            SELECT 
+                u.UserID, u.EmailAddress,
+                CONCAT(p.FirstName, ' ', p.LastName) AS FullName,
+                sp.StudentNumber
+            FROM user u
+            JOIN profile p ON u.UserID = p.UserID
+            JOIN studentprofile sp ON p.ProfileID = sp.ProfileID
+            WHERE (sp.StudentNumber = :identifier OR u.EmailAddress = :identifier)
+                AND u.UserType = 'Student'
+                AND u.IsDeleted = 0
+        ";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':identifier', $identifier);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error finding user: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function createPasswordResetToken($userId, $token, $expiresAt)
+    {
+        $query = "INSERT INTO password_reset_tokens (UserID, Token, ExpiresAt) VALUES (:userId, :token, :expiresAt)";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':userId', $userId);
+            $stmt->bindParam(':token', $token);
+            $stmt->bindParam(':expiresAt', $expiresAt);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error creating reset token: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getPasswordResetToken($token)
+    {
+        $query = "
+            SELECT prt.*, u.UserID, u.EmailAddress,
+                CONCAT(p.FirstName, ' ', p.LastName) AS FullName
+            FROM password_reset_tokens prt
+            JOIN user u ON prt.UserID = u.UserID
+            JOIN profile p ON u.UserID = p.UserID
+            WHERE prt.Token = :token 
+                AND prt.IsUsed = 0 
+                AND prt.ExpiresAt > NOW()
+        ";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':token', $token);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error getting reset token: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function markTokenAsUsed($token)
+    {
+        $query = "UPDATE password_reset_tokens SET IsUsed = 1 WHERE Token = :token";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':token', $token);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error marking token as used: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updatePassword($userId, $newPasswordHash)
+    {
+        $query = "UPDATE passwordpolicy SET PasswordHash = :passwordHash, PasswordSetDate = NOW() WHERE UserID = :userId";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':passwordHash', $newPasswordHash);
+            $stmt->bindParam(':userId', $userId);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error updating password: " . $e->getMessage());
+            return false;
+        }
+    }
 }
-?>

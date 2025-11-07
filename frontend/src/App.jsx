@@ -25,7 +25,8 @@ import ProfileSettingPage from './components/pages/profileSettingPage';
 import CurrentGradesPage from './components/pages/currentGradesPage';
 import PreviousGradesPage from './components/pages/previousGradesPage';
 import TryPage from './components/pages/tryPage';
-
+import ForgotPasswordPage from './components/pages/ForgotPasswordPage';
+import ResetPasswordPage from './components/pages/ResetPasswordPage';
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
                 <Route path="/admission" element={<AdmissionPage />} />
                 <Route path="/student-dashboard" element={<ProtectedRoute> <DashboardLayout /> </ProtectedRoute>}>
                   <Route index element={<DashboardPage />} />

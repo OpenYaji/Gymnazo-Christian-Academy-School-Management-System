@@ -35,12 +35,12 @@ const SettingsPage = () => {
         Settings
       </h1>
 
-      <div className="flex items-center gap-2 mb-6">
+      <div className="flex flex-wrap items-center gap-2 mb-6">
         {tabs.map((tab) => (
           <div key={tab.id} className="relative group">
             <button
               onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-300 ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-colors duration-300 ${
                 activeTab === tab.id
                   ? 'bg-amber-400 text-stone-900'
                   : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700'

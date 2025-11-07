@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { API_BASE_URL } from '../../config';
 
 import CurrentBalanceCard from '../common/transaction/CurrentBalanceCard';
 import PaymentMethodsCard from '../common/transaction/PaymentMethodsCard';
@@ -17,17 +16,23 @@ const TransactionPage = () => {
     const fetchTransactionData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${API_BASE_URL}/api/transactions/getTransactionData.php`, {
+        const response = await axios.get('/backend/api/transactions/getTransactionData.php', {
           withCredentials: true,
         });
+        
+        console.log('API Response:', response.data);
+        
         if (response.data.success) {
+          console.log('Transaction data received:', response.data.data);
           setTransactionData(response.data.data);
         } else {
+          console.error('API returned success=false:', response.data.message);
           setError(response.data.message || 'Failed to fetch transaction data.');
         }
       } catch (err) {
+        console.error('Error fetching transaction data:', err);
+        console.error('Error response:', err.response?.data);
         setError('An error occurred while fetching transactions.');
-        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -35,6 +40,8 @@ const TransactionPage = () => {
 
     fetchTransactionData();
   }, []);
+
+  console.log('Current state - Loading:', loading, 'Error:', error, 'TransactionData:', transactionData);
 
   if (loading) {
     return (
@@ -55,6 +62,7 @@ const TransactionPage = () => {
   }
 
   if (!transactionData) {
+    console.warn('No transaction data available despite no loading/error state');
     return (
         <div className="p-8">
             <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">Transaction</h1>
@@ -95,4 +103,3 @@ const TransactionPage = () => {
 };
 
 export default TransactionPage;
-

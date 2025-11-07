@@ -22,8 +22,8 @@ export default function DashboardSidebar({ collapsed, setCollapsed, mobileOpen, 
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-    const { logout } = useAuth();
-  
+  const { logout } = useAuth();
+
 
 
   useEffect(() => {

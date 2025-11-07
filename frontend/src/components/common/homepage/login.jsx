@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Bg from '../../../assets/img/bg.png';
@@ -38,7 +38,7 @@ const Login = () => {
 
     try {
       const result = await login(username, password);
-      
+
       if (result.success) {
         setLoggedInUser(result.user.fullName);
         setShowSuccessModal(true);
@@ -68,26 +68,26 @@ const Login = () => {
 
   return (
     <>
-      <SuccessModal 
-        isOpen={showSuccessModal} 
+      <SuccessModal
+        isOpen={showSuccessModal}
         username={loggedInUser}
       />
 
       <div className="relative h-[85.4vh] w-full flex items-center justify-center pb-6">
-        
-        <div 
-          className="absolute inset-0 bg-cover bg-center" 
+
+        <div
+          className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${Bg})` }}
         >
           <div className="absolute inset-0 bg-stone-900/60 dark:bg-black/70 z-0 transition-colors duration-300"></div>
         </div>
 
         <div className="relative z-10 w-full max-w-sm mx-4 p-8 rounded-2xl shadow-xl bg-stone-800/60 dark:bg-gray-900/70 border border-stone-700 dark:border-gray-600 backdrop-blur-sm transition-colors duration-300">
-          
+
           <div className="flex flex-col items-center mb-6">
-            <img 
-              src={Logo} 
-              alt="School Logo" 
+            <img
+              src={Logo}
+              alt="School Logo"
               className="w-20 h-20 mb-4 object-contain"
             />
             <h2 className="text-xl font-bold uppercase text-white tracking-wider">Student Login</h2>
@@ -100,11 +100,11 @@ const Login = () => {
           )}
 
           <form className="space-y-4" onSubmit={handleSubmit}>
-            
+
             <div className="relative">
-              <input 
-                type="text" 
-                placeholder="Student Number" 
+              <input
+                type="text"
+                placeholder="Student Number"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={loading}
@@ -117,9 +117,9 @@ const Login = () => {
 
             <div>
               <div className="relative">
-                <input 
-                  type="password" 
-                  placeholder="Password" 
+                <input
+                  type="password"
+                  placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading}
@@ -130,13 +130,13 @@ const Login = () => {
                 </span>
               </div>
               <div className="text-right mt-2">
-                <a href="#" className="text-xs text-gray-300 hover:text-amber-400 transition duration-300">Forgot Password?</a>
+                <Link to="/forgot-password" className="text-xs text-gray-300 hover:text-amber-400 transition duration-300">Forgot Password?</Link>
               </div>
             </div>
 
             <div>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={loading}
                 className="w-full py-3 text-gray-900 font-semibold rounded-full bg-amber-400 hover:bg-amber-300 transition duration-300 shadow-lg text-base disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
@@ -160,7 +160,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      
+
     </>
   );
 }

@@ -19,7 +19,7 @@ const PreviousGradesPage = () => {
         const fetchPreviousGrades = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/academics/getPreviousGrades.php`, {
+                const response = await axios.get('/backend/api/academics/getPreviousGrades.php', {
                     withCredentials: true,
                 });
                 if (response.data.success) {
