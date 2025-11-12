@@ -21,6 +21,8 @@ import DocumentPage from './components/pages/documentPage';
 import EventPage from './components/pages/eventPage';
 import LibraryPage from './components/pages/libraryPage';
 import TeacherPage from './components/pages/teacherPage';
+import TextSundoPage from './components/pages/TextSundoPage';
+
 import ProfileSettingPage from './components/pages/profileSettingPage';
 import CurrentGradesPage from './components/pages/currentGradesPage';
 import PreviousGradesPage from './components/pages/previousGradesPage';
@@ -54,6 +56,7 @@ function App() {
                   <Route path="events" element={<EventPage />} />
                   <Route path="library" element={<LibraryPage />} />
                   <Route path="teacher-qa" element={<TeacherPage />} />
+                  <Route path="text-sundo" element={<TextSundoPage />} />
                   <Route path="profile-settings" element={<ProfileSettingPage />} />
                   <Route path="academic/current-grades" element={<CurrentGradesPage />} />
                   <Route path="academic/previous-grades" element={<PreviousGradesPage />} />

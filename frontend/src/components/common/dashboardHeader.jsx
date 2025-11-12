@@ -4,6 +4,7 @@ import { Menu, Search, Sun, Moon, Bell, User, ArrowLeft, ArrowRight } from 'luci
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import DefaultProfilePic from '../../assets/img/jhego.jpg';
+import * as path from 'path';
 
 const Tooltip = ({ text }) => (
     <span className="
@@ -48,8 +49,8 @@ const DashboardHeader = ({ setMobileOpen }) => {
         { name: 'Document Request', path: '/student-dashboard/document-request', keywords: ['document', 'request', 'forms'] },
         { name: 'Events', path: '/student-dashboard/events', keywords: ['events', 'calendar', 'activities'] },
         { name: 'Library', path: '/student-dashboard/library', keywords: ['library', 'books', 'resources'] },
-        { name: 'Teacher Q&A', path: '/student-dashboard/teacher-qa', keywords: ['teacher', 'question', 'ask', 'qa'] },
-        { name: 'Profile Settings', path: '/student-dashboard/profile-settings', keywords: ['profile', 'settings', 'edit'] }
+        { name: 'Profile Settings', path: '/student-dashboard/profile-settings', keywords: ['profile', 'settings', 'edit'] },
+        { name: 'Text Sundo', path: '/student-dashboard/text-sundo', keywords: ['escort', 'sundo', 'text', 'system'] }
     ];
 
     useEffect(() => {

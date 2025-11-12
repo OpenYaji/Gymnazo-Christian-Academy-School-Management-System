@@ -50,11 +50,11 @@ const QuickAccessGrid = () => {
       path: '/student-dashboard/subject'
     },
     { 
-      icon: <CalendarDays size={20} />, 
-      title: 'Events', 
-      subtitle: '3 Ongoing',
-      tooltipText: 'See All Events',
-      path: '/student-dashboard/events' 
+      icon: <MessageCircleQuestion size={20} />, 
+      title: 'Grades', 
+      subtitle: 'View Latest Grades',
+      tooltipText: 'Check your Grades',
+      path: '/student-dashboard/academic/current-grades' 
     },
     { 
       icon: <FileText size={20} />, 
@@ -73,17 +73,17 @@ const QuickAccessGrid = () => {
     { 
       icon: <Library size={20} />, 
       title: 'Library Access', 
-      subtitle: '10 Books Available',
+      subtitle: 'No Books Available now',
       tooltipText: 'Open Library Portal',
       path: '/student-dashboard/library' 
     },
     { 
       icon: <MessageCircleQuestion size={20} />, 
-      title: 'Teacher Q&A Corner', 
-      subtitle: 'Ask About...',
+      title: 'Text Sundo', 
+      subtitle: 'Add & Verify New  Sundo',
       tooltipText: 'Ask a Teacher',
-      path: '/student-dashboard/teacher-qa' 
-    },
+      path: '/student-dashboard/text-sundo' 
+    }
   ];
 
   return (

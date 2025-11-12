@@ -121,9 +121,9 @@ const Announcement = () => {
             whileInView="visible"
             viewport={{ once: false, amount: 0.2 }}
           >
-             <div className="lg:sticky top-24">
-                <h3 className="text-2xl font-bold text-[#5B3E31] dark:text-amber-400 mb-3">SCHOOL NEWS</h3>
-                <div className="flex justify-center">
+             <div className="lg:sticky top-32">
+             <h2 className="flex justify-center text-2xl font-bold text-[#5B3E31] dark:text-amber-400 sm:text-3xl">NEWS</h2>
+             <div className="flex justify-center">
                     <Carousel items={carouselNewsData} baseWidth={350} height={380} autoplay={true} autoplayDelay={3500} pauseOnHover={true} loop={true} />
                 </div>
             </div>

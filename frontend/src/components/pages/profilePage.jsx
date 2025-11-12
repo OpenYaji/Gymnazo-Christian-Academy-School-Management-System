@@ -4,6 +4,7 @@ import ProfileHeader from '../common/account/ProfileHeader';
 import PersonalInfo from '../common/account/PersonalInfo';
 import ParentGuardianInfo from '../common/account/ParentGuardianInfo';
 import MedicalInfo from '../common/account/MedicalInfo';
+import AuthorizedEscorts from '../common/account/AuthorizedEscorts';
 
 const ProfilePage = () => {
   const { user, loading } = useAuth();
@@ -62,8 +63,9 @@ const ProfilePage = () => {
             <PersonalInfo personalData={studentData.personal} academicData={studentData.academic} />
             <ParentGuardianInfo data={studentData.parentGuardian} />
           </div>
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 flex flex-col gap-8">
             <MedicalInfo data={studentData.medical} />
+            <AuthorizedEscorts />
           </div>
         </div>
       </div>

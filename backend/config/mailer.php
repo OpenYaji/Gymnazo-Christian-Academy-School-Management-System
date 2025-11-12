@@ -29,7 +29,6 @@ class Mailer
                 getenv('SMTP_FROM_NAME') ?: 'Gymnazu School'
             );
         } catch (Exception $e) {
-            // Silent fail
         }
     }
 
