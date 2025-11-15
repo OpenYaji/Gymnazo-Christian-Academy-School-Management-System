@@ -74,7 +74,7 @@ const LoginHeader = () => {
       </div>
       <div className='h-8 sm:h-8 bg-[#F4D77D] dark:bg-gray-700 flex items-center justify-center py-2 transition-colors duration-300'>
         <h1 className='text-center text-sm sm:text-base md:text-lg lg:text-xl font-bold text-[#5B3E31] dark:text-amber-400 px-4 transition-colors duration-300'>
-            PORTAL LOGIN
+            STUDENT PORTAL LOGIN
         </h1>
       </div>
     </header>
