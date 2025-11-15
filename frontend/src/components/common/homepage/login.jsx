@@ -1,9 +1,42 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { GraduationCap, UserCog, ClipboardList, BookOpen, Shield, ArrowRight } from 'lucide-react';
 import Bg from '../../../assets/img/bg.png';
 import Logo from '../../../assets/img/gymnazu.png';
 import SuccessModal from "../../modals/SuccessModal";
+
+const ROLES = {
+  STUDENT: {
+    id: 'student',
+    label: 'Student',
+    icon: GraduationCap
+  },
+  ADMIN: {
+    id: 'admin',
+    label: 'Admin',
+    icon: UserCog,
+    url: 'https://gcanovaliches.vercel.app'
+  },
+  REGISTRAR: {
+    id: 'registrar',
+    label: 'Registrar',
+    icon: ClipboardList,
+    url: 'https://sqcholar.netlify.app'
+  },
+  TEACHER: {
+    id: 'teacher',
+    label: 'Teacher',
+    icon: BookOpen,
+    url: 'https://teacher.gcanovaliches.com'
+  },
+  GUARD: {
+    id: 'guard',
+    label: 'Guard',
+    icon: Shield,
+    url: 'https://guard.gcanovaliches.com'
+  }
+};
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -12,7 +45,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(ROLES.STUDENT.id);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const navigate = useNavigate();
   const { user, loading: authLoading, login } = useAuth();
 
@@ -22,8 +56,26 @@ const Login = () => {
     if (!authLoading && user && !isSubmitting) {
       navigate('/student-dashboard', { replace: true });
     }
-
   }, [user, authLoading, isSubmitting, navigate]);
+
+  const handleRoleChange = (roleId) => {
+    if (roleId === selectedRole) return;
+
+    setIsTransitioning(true);
+    setError('');
+
+    setTimeout(() => {
+      setSelectedRole(roleId);
+      setUsername('');
+      setPassword('');
+      setIsTransitioning(false);
+    }, 200);
+  };
+
+  const handleStaffRedirect = (url) => {
+    window.location.href = url;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -67,6 +119,10 @@ const Login = () => {
     );
   }
 
+  const isStudentRole = selectedRole === ROLES.STUDENT.id;
+  const currentRole = Object.values(ROLES).find(role => role.id === selectedRole);
+  const CurrentRoleIcon = currentRole?.icon;
+
   return (
     <>
       <SuccessModal
@@ -75,7 +131,6 @@ const Login = () => {
       />
 
       <div className="relative h-[85.4vh] w-full flex items-center justify-center pb-6">
-
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${Bg})` }}
@@ -83,102 +138,154 @@ const Login = () => {
           <div className="absolute inset-0 bg-stone-900/60 dark:bg-black/70 z-0 transition-colors duration-300"></div>
         </div>
 
-        <div className="relative z-10 w-full max-w-sm mx-4 p-8 rounded-2xl shadow-xl bg-stone-800/60 dark:bg-gray-900/70 border border-stone-700 dark:border-gray-600 backdrop-blur-sm transition-colors duration-300">
-
-          <div className="flex flex-col items-center mb-6">
+        <div className="relative z-10 w-full max-w-sm mx-4 p-5 sm:p-6 rounded-2xl shadow-xl bg-stone-800/60 dark:bg-gray-900/70 border border-stone-700 dark:border-gray-600 backdrop-blur-sm transition-all duration-300">
+          <div className="flex flex-col items-center mb-3 sm:mb-4">
             <img
               src={Logo}
               alt="School Logo"
-              className="w-20 h-20 mb-4 object-contain"
+              className="w-14 h-14 sm:w-16 sm:h-16 mb-2 object-contain"
             />
-            <h2 className="text-xl font-bold uppercase text-white tracking-wider">Student Login</h2>
+          </div>
+
+          {/* Role Selector */}
+          <div className="mb-3 sm:mb-4">
+            <label className="block text-[10px] sm:text-xs text-gray-300 mb-1.5 font-medium tracking-wide">Login as:</label>
+            <div className="grid grid-cols-5 gap-1.5 p-1 bg-stone-900/50 dark:bg-gray-800/50 rounded-xl border border-stone-600 dark:border-gray-700">
+              {Object.values(ROLES).map((role) => {
+                const IconComponent = role.icon;
+                return (
+                  <button
+                    key={role.id}
+                    type="button"
+                    onClick={() => handleRoleChange(role.id)}
+                    className={`
+                      relative flex flex-col items-center justify-center py-2 px-1 rounded-lg
+                      transition-all duration-300 ease-in-out
+                      ${selectedRole === role.id
+                        ? 'bg-amber-400 text-gray-900 shadow-lg scale-105'
+                        : 'text-gray-300 hover:bg-stone-700/50 dark:hover:bg-gray-700/50'
+                      }
+                    `}
+                    aria-label={`Login as ${role.label}`}
+                  >
+                    <IconComponent className="w-5 h-5 mb-0.5" strokeWidth={2.5} />
+                    <span className="text-[9px] font-semibold leading-tight">{role.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-500/20 border border-red-500 rounded-lg text-red-200 text-sm text-center">
+            <div className="mb-3 p-2 sm:p-2.5 bg-red-500/20 border border-red-500 rounded-lg text-red-200 text-xs text-center">
               {error}
             </div>
           )}
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
-
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Student Number"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                disabled={loading}
-                className="w-full pl-12 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-amber-500 transition duration-300 placeholder-gray-500 dark:placeholder-gray-400 text-gray-800 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm text-sm disabled:opacity-50"
-              />
-              <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-              </span>
-            </div>
-
-            <div>
+          {/* Student Login Form */}
+          <div className={`
+            transition-all duration-300 ease-in-out
+            ${isStudentRole && !isTransitioning ? 'opacity-100 max-h-80' : 'opacity-0 max-h-0 overflow-hidden'}
+          `}>
+            <form className="space-y-2.5 sm:space-y-3" onSubmit={handleSubmit}>
               <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  type="text"
+                  placeholder="Student Number"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   disabled={loading}
-                  className="w-full pl-12 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-amber-500 transition duration-300 placeholder-gray-500 dark:placeholder-gray-400 text-gray-800 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm text-sm disabled:opacity-50"
+                  className="w-full pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-amber-500 transition duration-300 placeholder-gray-500 dark:placeholder-gray-400 text-gray-800 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm text-sm disabled:opacity-50"
                 />
-                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 10a3 3 0 106 0v-3a3 3 0 00-6 0v3z"></path></svg>
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                 </span>
+              </div>
+
+              <div>
+                <div className="relative">
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={loading}
+                    className="w-full pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 dark:border-gray-600 rounded-full focus:ring-2 focus:ring-amber-500 transition duration-300 placeholder-gray-500 dark:placeholder-gray-400 text-gray-800 dark:text-gray-100 bg-white dark:bg-gray-700 shadow-sm text-sm disabled:opacity-50"
+                  />
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 10a3 3 0 106 0v-3a3 3 0 00-6 0v3z"></path></svg>
+                  </span>
+                </div>
+                <div className="text-right mt-1">
+                  <Link to="/forgot-password" className="text-xs text-gray-300 hover:text-amber-400 transition duration-300">Forgot Password?</Link>
+                </div>
+              </div>
+
+              <div className="pt-1">
                 <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                  type="submit"
                   disabled={loading}
+                  className="w-full py-2 sm:py-2.5 text-gray-900 font-semibold rounded-full bg-amber-400 hover:bg-amber-300 transition duration-300 shadow-lg text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {showPassword ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
-                    </svg>
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>Logging in...</span>
+                    </>
                   ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
+                    'Login'
                   )}
                 </button>
               </div>
-              <div className="text-right mt-2">
-                <Link to="/forgot-password" className="text-xs text-gray-300 hover:text-amber-400 transition duration-300">Forgot Password?</Link>
+            </form>
+          </div>
+
+          {/* Staff Portal Redirect */}
+          <div className={`
+            transition-all duration-300 ease-in-out
+            ${!isStudentRole && !isTransitioning ? 'opacity-100 max-h-80' : 'opacity-0 max-h-0 overflow-hidden'}
+          `}>
+            <div className="space-y-3 py-3 sm:py-4">
+              <div className="text-center space-y-1">
+                {CurrentRoleIcon && (
+                  <div className="flex justify-center mb-2">
+                    <CurrentRoleIcon className="w-12 h-12 sm:w-14 sm:h-14 text-amber-400" strokeWidth={2} />
+                  </div>
+                )}
+                <h3 className="text-white text-base font-semibold">{currentRole?.label} Portal</h3>
+                <p className="text-gray-300 text-xs">You will be redirected to the {currentRole?.label.toLowerCase()} portal</p>
+              </div>
+
+              <button
+                onClick={() => handleStaffRedirect(currentRole?.url)}
+                className="w-full py-2 sm:py-2.5 text-gray-900 font-semibold rounded-full bg-amber-400 hover:bg-amber-300 transition duration-300 shadow-lg text-sm flex items-center justify-center gap-2 group"
+              >
+                <span>Continue to Portal</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <div className="text-center">
+                <p className="text-xs text-gray-400">
+                  Or{' '}
+                  <button
+                    onClick={() => handleRoleChange(ROLES.STUDENT.id)}
+                    className="text-amber-400 hover:underline font-medium"
+                  >
+                    login as student
+                  </button>
+                </p>
               </div>
             </div>
+          </div>
 
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3 text-gray-900 font-semibold rounded-full bg-amber-400 hover:bg-amber-300 transition duration-300 shadow-lg text-base disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span>Logging in...</span>
-                  </>
-                ) : (
-                  'Login'
-                )}
-              </button>
-            </div>
-          </form>
-
-          <div className="text-center mt-6 text-xs text-gray-300">
+          <div className="text-center mt-3 sm:mt-4 text-xs text-gray-300">
             Need help? Contact the <Link to="/#contact-us" className="font-semibold text-amber-400 hover:underline">School Office</Link>
           </div>
         </div>
       </div>
-
     </>
   );
 }

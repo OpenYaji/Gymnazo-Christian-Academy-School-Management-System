@@ -2,7 +2,7 @@
 
 class Database {
     private $host = 'localhost';
-    private $db_name = 'gymnadb';
+    private $db_name = 'gcanovadb';
     private $username = 'root';
     private $password = '';
     public $conn;
