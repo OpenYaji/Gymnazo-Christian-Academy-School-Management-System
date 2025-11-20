@@ -1,98 +1,253 @@
 <?php
-class Admission {
+class Admission
+{
     private $pdo;
-    
-    public function __construct($pdo) {
+
+    public function __construct($pdo)
+    {
         $this->pdo = $pdo;
     }
-    
-    public function create($data) {
+
+    public function create($data)
+    {
         $stmt = $this->pdo->prepare("
-            INSERT INTO admission_applications (
-                tracking_number, enrollee_type, student_first_name, student_last_name,
-                birthdate, gender, address, contact_number, email_address,
-                guardian_first_name, guardian_last_name, relationship,
-                guardian_contact, guardian_email, grade_level, previous_school,
-                privacy_agreement, application_status, submitted_at
+            INSERT INTO application (
+                ApplicantProfileID,
+                SchoolYearID,
+                ApplyingForGradeLevelID,
+                EnrolleeType,
+                ApplicationStatus,
+                SubmissionDate,
+                PreviousSchool,
+                StudentFirstName,
+                StudentLastName,
+                StudentMiddleName,
+                DateOfBirth,
+                Gender,
+                Address,
+                ContactNumber,
+                EmailAddress,
+                GuardianFirstName,
+                GuardianLastName,
+                GuardianRelationship,
+                GuardianContact,
+                GuardianEmail,
+                TrackingNumber,
+                PrivacyAgreement
             ) VALUES (
-                :tracking_number, :enrollee_type, :student_first_name, :student_last_name,
-                :birthdate, :gender, :address, :contact_number, :email_address,
-                :guardian_first_name, :guardian_last_name, :relationship,
-                :guardian_contact, :guardian_email, :grade_level, :previous_school,
-                :privacy_agreement, 'pending', NOW()
+                :applicantProfileId,
+                :schoolYearId,
+                :applyingForGradeLevelId,
+                :enrolleeType,
+                'Pending',
+                NOW(),
+                :previousSchool,
+                :studentFirstName,
+                :studentLastName,
+                :studentMiddleName,
+                :dateOfBirth,
+                :gender,
+                :address,
+                :contactNumber,
+                :emailAddress,
+                :guardianFirstName,
+                :guardianLastName,
+                :guardianRelationship,
+                :guardianContact,
+                :guardianEmail,
+                :trackingNumber,
+                :privacyAgreement
             )
         ");
-        
+
         $stmt->execute($data);
         return $this->pdo->lastInsertId();
     }
-    
-    public function findByTrackingNumber($trackingNumber) {
+
+    public function findByTrackingNumber($trackingNumber)
+    {
         $stmt = $this->pdo->prepare("
             SELECT 
-                tracking_number, 
-                CONCAT(student_first_name, ' ', student_last_name) as student_name,
-                grade_level,
-                application_status,
-                submitted_at,
-                updated_at
-            FROM admission_applications 
-            WHERE tracking_number = :tracking_number
+                a.ApplicationID as id,
+                a.TrackingNumber as tracking_number,
+                CONCAT(a.StudentFirstName, ' ', 
+                       IFNULL(CONCAT(a.StudentMiddleName, ' '), ''), 
+                       a.StudentLastName) as student_name,
+                gl.LevelName as grade_level,
+                a.ApplicationStatus as application_status,
+                a.SubmissionDate as submitted_at,
+                a.ReviewedDate as updated_at
+            FROM application a
+            LEFT JOIN gradelevel gl ON a.ApplyingForGradeLevelID = gl.GradeLevelID
+            WHERE a.TrackingNumber = :tracking_number
         ");
-        
+
         $stmt->execute([':tracking_number' => $trackingNumber]);
         return $stmt->fetch();
     }
-    
-    public function addDocument($applicationId, $documentType, $fileName, $filePath) {
+
+    public function addDocument($applicationId, $documentType, $fileName, $filePath, $fileSize = null, $mimeType = null)
+    {
+        // First, upload to securefile table
         $stmt = $this->pdo->prepare("
-            INSERT INTO admission_documents (
-                application_id, document_type, file_name, file_path, uploaded_at
+            INSERT INTO securefile (
+                OriginalFileName,
+                StoredFileName,
+                FilePath,
+                FileSize,
+                MimeType,
+                UploadedByUserID,
+                UploadedAt,
+                AccessLevel
             ) VALUES (
-                :application_id, :document_type, :file_name, :file_path, NOW()
+                :originalFileName,
+                :storedFileName,
+                :filePath,
+                :fileSize,
+                :mimeType,
+                999,
+                NOW(),
+                'private'
             )
         ");
-        
+
+        $stmt->execute([
+            ':originalFileName' => $fileName,
+            ':storedFileName' => $fileName,
+            ':filePath' => $filePath,
+            ':fileSize' => $fileSize,
+            ':mimeType' => $mimeType
+        ]);
+
+        $secureFileId = $this->pdo->lastInsertId();
+
+        // Get or create requirement type
+        $reqTypeStmt = $this->pdo->prepare("
+            SELECT RequirementTypeID FROM requirementtype WHERE TypeName = :typeName
+        ");
+        $reqTypeStmt->execute([':typeName' => $documentType]);
+        $reqType = $reqTypeStmt->fetch();
+
+        if (!$reqType) {
+            $insertReqType = $this->pdo->prepare("
+                INSERT INTO requirementtype (TypeName, IsMandatory, SortOrder) 
+                VALUES (:typeName, 1, 0)
+            ");
+            $insertReqType->execute([':typeName' => $documentType]);
+            $requirementTypeId = $this->pdo->lastInsertId();
+        } else {
+            $requirementTypeId = $reqType['RequirementTypeID'];
+        }
+
+        // Link to applicationrequirement
+        $stmt = $this->pdo->prepare("
+            INSERT INTO applicationrequirement (
+                ApplicationID,
+                RequirementTypeID,
+                SecureFileID,
+                RequirementStatus,
+                SubmittedDate
+            ) VALUES (
+                :applicationId,
+                :requirementTypeId,
+                :secureFileId,
+                'Submitted',
+                NOW()
+            )
+        ");
+
         return $stmt->execute([
-            ':application_id' => $applicationId,
-            ':document_type' => $documentType,
-            ':file_name' => $fileName,
-            ':file_path' => $filePath
+            ':applicationId' => $applicationId,
+            ':requirementTypeId' => $requirementTypeId,
+            ':secureFileId' => $secureFileId
         ]);
     }
-    
-    public function getAll($limit = 50, $offset = 0) {
-        $stmt = $this->pdo->prepare("
+
+    public function getAll($limit = 50, $offset = 0, $status = null)
+    {
+        $query = "
             SELECT 
-                id,
-                tracking_number,
-                CONCAT(student_first_name, ' ', student_last_name) as student_name,
-                grade_level,
-                application_status,
-                submitted_at
-            FROM admission_applications
-            ORDER BY submitted_at DESC
-            LIMIT :limit OFFSET :offset
-        ");
-        
+                a.ApplicationID as id,
+                a.TrackingNumber as tracking_number,
+                CONCAT(a.StudentFirstName, ' ', a.StudentLastName) as student_name,
+                gl.LevelName as grade_level,
+                a.ApplicationStatus as application_status,
+                a.SubmissionDate as submitted_at
+            FROM application a
+            LEFT JOIN gradelevel gl ON a.ApplyingForGradeLevelID = gl.GradeLevelID";
+
+        if ($status) {
+            $query .= " WHERE a.ApplicationStatus = :status";
+        }
+
+        $query .= " ORDER BY a.SubmissionDate DESC LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->pdo->prepare($query);
+
+        if ($status) {
+            $stmt->bindValue(':status', $status);
+        }
+
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
-        
+
         return $stmt->fetchAll();
     }
-    
-    public function updateStatus($id, $status) {
+
+    public function updateStatus($id, $status, $reviewedByUserId = null)
+    {
         $stmt = $this->pdo->prepare("
-            UPDATE admission_applications 
-            SET application_status = :status, updated_at = NOW()
-            WHERE id = :id
+            UPDATE application 
+            SET ApplicationStatus = :status,
+                ReviewedDate = NOW(),
+                ReviewedByUserID = :reviewedByUserId
+            WHERE ApplicationID = :id
         ");
-        
+
         return $stmt->execute([
             ':status' => $status,
+            ':reviewedByUserId' => $reviewedByUserId,
             ':id' => $id
         ]);
     }
+
+    public function getGradeLevels()
+    {
+        $stmt = $this->pdo->query("
+            SELECT GradeLevelID as id, LevelName as name 
+            FROM gradelevel 
+            ORDER BY SortOrder ASC
+        ");
+
+        return $stmt->fetchAll();
+    }
+
+    public function getActiveSchoolYear()
+    {
+        $stmt = $this->pdo->query("
+            SELECT SchoolYearID 
+            FROM schoolyear 
+            WHERE IsActive = 1 
+            LIMIT 1
+        ");
+
+        $result = $stmt->fetch();
+        return $result ? $result['SchoolYearID'] : 1;
+    }
+
+    public function getGradeLevelIdByName($levelName)
+    {
+        $stmt = $this->pdo->prepare("
+            SELECT GradeLevelID 
+            FROM gradelevel 
+            WHERE LOWER(REPLACE(LevelName, ' ', '')) = LOWER(REPLACE(:levelName, ' ', ''))
+            OR LOWER(REPLACE(LevelName, '-', '')) = LOWER(REPLACE(:levelName, '-', ''))
+        ");
+
+        $stmt->execute([':levelName' => $levelName]);
+        $result = $stmt->fetch();
+
+        return $result ? $result['GradeLevelID'] : null;
+    }
 }
-?>

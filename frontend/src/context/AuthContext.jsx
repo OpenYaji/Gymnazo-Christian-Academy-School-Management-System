@@ -10,6 +10,12 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const publicRoutes = ['/', '/login', '/forgot-password', '/reset-password', '/admission'];
+
+  const isPublicRoute = (pathname) => {
+    return publicRoutes.some(route => pathname === route || pathname.startsWith(route));
+  };
+
   const fetchCurrentUser = async () => {
     try {
       const response = await axios.get(
@@ -23,6 +29,7 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
       }
     } catch (error) {
+      console.error('Fetch user error:', error);
       setUser(null);
     } finally {
       setLoading(false);
@@ -30,8 +37,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    fetchCurrentUser();
-  }, []);
+    // Only fetch user if not on a public route
+    if (!isPublicRoute(location.pathname)) {
+      fetchCurrentUser();
+    } else {
+      // On public routes, just set loading to false
+      setLoading(false);
+    }
+  }, [location.pathname]);
 
   const login = async (username, password) => {
     try {

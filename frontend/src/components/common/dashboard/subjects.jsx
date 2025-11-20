@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Clock, User, BookOpen, X } from 'lucide-react';
 import axios from 'axios';
+import EngImg from '../../../assets/img/eng1.jpg';
+import MathImg from '../../../assets/img/math1.png';
+import FilipinoImg from '../../../assets/img/fil1.jpg';
+import ScienceImg from '../../../assets/img/sci2.jpg';
+import APImg from '../../../assets/img/ap1.png';
+import MapehImg from '../../../assets/img/mapeh1.png';
+
 
 const SubjectCard = ({ subject, onClick }) => {
   // Sample background images - you can replace with actual subject-themed images
   const subjectImages = {
-    'ENGLISH': 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400',
-    'MATH': 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400',
-    'FILIPINO': 'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=400',
-    'SCIENCE': 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400',
-    'ARALING PANLIPUNAN': 'https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400',
-    'MAPEH': 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=400',
+    'ENGLISH': EngImg,
+    'MATH': MathImg,
+    'FILIPINO': FilipinoImg,
+    'SCIENCE': ScienceImg,
+    'ARALING PANLIPUNAN': APImg,
+    'MAPEH': MapehImg,
     'EDUKASYON SA PAGPAPAKATAO': 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400',
     'COMPUTER': 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=400',
     'default': 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400'
