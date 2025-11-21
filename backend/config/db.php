@@ -3,7 +3,7 @@
 class Database
 {
     private $host = 'localhost'; //1st
-    private $db_name = 'gcamerge';
+    private $db_name = 'gcanovadb';
     private $username = 'root';
     private $password = '';
     public $conn;
