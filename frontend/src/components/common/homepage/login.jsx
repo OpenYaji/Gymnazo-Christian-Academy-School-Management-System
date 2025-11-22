@@ -48,15 +48,7 @@ const Login = () => {
   const [selectedRole, setSelectedRole] = useState(ROLES.STUDENT.id);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const navigate = useNavigate();
-  const { user, loading: authLoading, login } = useAuth();
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (!authLoading && user && !isSubmitting) {
-      navigate('/student-dashboard', { replace: true });
-    }
-  }, [user, authLoading, isSubmitting, navigate]);
+  const { login } = useAuth();
 
   const handleRoleChange = (roleId) => {
     if (roleId === selectedRole) return;
@@ -80,12 +72,10 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    setIsSubmitting(true);
 
     if (!username.trim() || !password.trim()) {
       setError('Please fill in all fields');
       setLoading(false);
-      setIsSubmitting(false)
       return;
     }
 
@@ -110,14 +100,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
-      </div>
-    );
-  }
 
   const isStudentRole = selectedRole === ROLES.STUDENT.id;
   const currentRole = Object.values(ROLES).find(role => role.id === selectedRole);

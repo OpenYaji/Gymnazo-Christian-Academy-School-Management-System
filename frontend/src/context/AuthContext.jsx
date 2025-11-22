@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext(null);
 
@@ -8,13 +8,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const publicRoutes = ['/', '/login', '/forgot-password', '/reset-password', '/admission'];
-
-  const isPublicRoute = (pathname) => {
-    return publicRoutes.some(route => pathname === route || pathname.startsWith(route));
-  };
 
   const fetchCurrentUser = async () => {
     try {
@@ -37,14 +30,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // Only fetch user if not on a public route
-    if (!isPublicRoute(location.pathname)) {
-      fetchCurrentUser();
-    } else {
-      // On public routes, just set loading to false
-      setLoading(false);
-    }
-  }, [location.pathname]);
+    fetchCurrentUser();
+  }, []);
 
   const login = async (username, password) => {
     try {

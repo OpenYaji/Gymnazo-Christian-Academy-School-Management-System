@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, Search, Sun, Moon, Bell, User, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Menu, Search, Sun, Moon, User, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import DefaultProfilePic from '../../assets/img/jhego.jpg';
-import * as path from 'path';
+import NotificationDropdown from './NotificationDropdown';
 
 const Tooltip = ({ text }) => (
     <span className="
@@ -30,7 +30,6 @@ const DashboardHeader = ({ setMobileOpen }) => {
     const [searchResults, setSearchResults] = useState([]);
     const [showSearchResults, setShowSearchResults] = useState(false);
 
-    const notificationRef = useRef(null);
     const profileRef = useRef(null);
     const searchRef = useRef(null);
 
@@ -60,9 +59,6 @@ const DashboardHeader = ({ setMobileOpen }) => {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (openDropdown === 'notifications' && notificationRef.current && !notificationRef.current.contains(event.target)) {
-                setOpenDropdown(null);
-            }
             if (openDropdown === 'profile' && profileRef.current && !profileRef.current.contains(event.target)) {
                 setOpenDropdown(null);
             }
@@ -111,12 +107,6 @@ const DashboardHeader = ({ setMobileOpen }) => {
     const formattedTime = currentTime.toLocaleTimeString('en-US', {
         hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true,
     });
-
-    const notifications = [
-        { id: 1, message: 'New assignment posted for Math.', time: '5m ago' },
-        { id: 2, message: 'Upcoming event: School Fair on Friday.', time: '1h ago' },
-        { id: 3, message: 'Your tuition payment is due next week.', time: '1d ago' },
-    ];
 
     if (!user) {
         return (
@@ -227,28 +217,7 @@ const DashboardHeader = ({ setMobileOpen }) => {
                     <Tooltip text={theme === 'dark' ? 'Light Mode' : 'Dark Mode'} />
                 </div>
 
-                <div className="relative group" ref={notificationRef}>
-                    <button onClick={() => toggleDropdown('notifications')} className='relative p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors'>
-                        <Bell className='w-5 h-5 text-gray-600 dark:text-gray-400' />
-                        <span className='absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full'></span>
-                    </button>
-                    <Tooltip text="Notifications" />
-                    {openDropdown === 'notifications' && (
-                        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-700 rounded-lg shadow-xl border dark:border-slate-600 animate-fade-in-down">
-                            <div className="p-4 border-b dark:border-slate-600">
-                                <h3 className="font-semibold text-gray-800 dark:text-white">Notifications</h3>
-                            </div>
-                            <ul className="py-2 max-h-64 overflow-y-auto">
-                                {notifications.map(notif => (
-                                    <li key={notif.id} className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-slate-600 cursor-pointer">
-                                        <p className="text-sm text-gray-700 dark:text-gray-300">{notif.message}</p>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">{notif.time}</p>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                </div>
+                <NotificationDropdown />
 
                 <div className="relative group" ref={profileRef}>
                     <button onClick={() => toggleDropdown('profile')} className='flex items-center gap-2 cursor-pointer'>

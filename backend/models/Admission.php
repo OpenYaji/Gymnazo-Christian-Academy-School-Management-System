@@ -10,58 +10,69 @@ class Admission
 
     public function create($data)
     {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO application (
-                ApplicantProfileID,
-                SchoolYearID,
-                ApplyingForGradeLevelID,
-                EnrolleeType,
-                ApplicationStatus,
-                SubmissionDate,
-                PreviousSchool,
-                StudentFirstName,
-                StudentLastName,
-                StudentMiddleName,
-                DateOfBirth,
-                Gender,
-                Address,
-                ContactNumber,
-                EmailAddress,
-                GuardianFirstName,
-                GuardianLastName,
-                GuardianRelationship,
-                GuardianContact,
-                GuardianEmail,
-                TrackingNumber,
-                PrivacyAgreement
-            ) VALUES (
-                :applicantProfileId,
-                :schoolYearId,
-                :applyingForGradeLevelId,
-                :enrolleeType,
-                'Pending',
-                NOW(),
-                :previousSchool,
-                :studentFirstName,
-                :studentLastName,
-                :studentMiddleName,
-                :dateOfBirth,
-                :gender,
-                :address,
-                :contactNumber,
-                :emailAddress,
-                :guardianFirstName,
-                :guardianLastName,
-                :guardianRelationship,
-                :guardianContact,
-                :guardianEmail,
-                :trackingNumber,
-                :privacyAgreement
-            )
-        ");
+        try {
+            $stmt = $this->pdo->prepare("
+                INSERT INTO application (
+                    ApplicantProfileID,
+                    SchoolYearID,
+                    ApplyingForGradeLevelID,
+                    EnrolleeType,
+                    ApplicationStatus,
+                    SubmissionDate,
+                    PreviousSchool,
+                    StudentFirstName,
+                    StudentLastName,
+                    StudentMiddleName,
+                    DateOfBirth,
+                    Gender,
+                    Address,
+                    ContactNumber,
+                    EmailAddress,
+                    GuardianFirstName,
+                    GuardianLastName,
+                    GuardianRelationship,
+                    GuardianContact,
+                    GuardianEmail,
+                    TrackingNumber,
+                    PrivacyAgreement
+                ) VALUES (
+                    :applicantProfileId,
+                    :schoolYearId,
+                    :applyingForGradeLevelId,
+                    :enrolleeType,
+                    'Pending',
+                    NOW(),
+                    :previousSchool,
+                    :studentFirstName,
+                    :studentLastName,
+                    :studentMiddleName,
+                    :dateOfBirth,
+                    :gender,
+                    :address,
+                    :contactNumber,
+                    :emailAddress,
+                    :guardianFirstName,
+                    :guardianLastName,
+                    :guardianRelationship,
+                    :guardianContact,
+                    :guardianEmail,
+                    :trackingNumber,
+                    :privacyAgreement
+                )
+            ");
 
-        $stmt->execute($data);
-        return $this->pdo->lastInsertId();
+            $executed = $stmt->execute($data);
+
+            if (!$executed) {
+                error_log("Database insert failed: " . print_r($stmt->errorInfo(), true));
+                return false;
+            }
+
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            error_log("Database error in Admission::create: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function findByTrackingNumber($trackingNumber)

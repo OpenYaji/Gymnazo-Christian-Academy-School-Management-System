@@ -167,11 +167,14 @@ class AdmissionController
 
             // Get active school year
             $schoolYearId = $this->admissionModel->getActiveSchoolYear();
+            if (!$schoolYearId) {
+                throw new Exception("No active school year found. Please contact administration.");
+            }
 
             // Get grade level ID
             $gradeLevelId = $this->admissionModel->getGradeLevelIdByName($postData['gradeLevel']);
             if (!$gradeLevelId) {
-                throw new Exception("Invalid grade level selected");
+                throw new Exception("Invalid grade level selected: " . $postData['gradeLevel']);
             }
 
             // Map enrollee type to match enum values
@@ -185,9 +188,9 @@ class AdmissionController
             // Map gender to match enum values
             $gender = ucfirst(strtolower($postData['gender'])); // Male or Female
 
-            // Prepare data for insertion
+            // Prepare data for insertion - REMOVE ApplicantProfileID since it's causing issues
             $data = [
-                ':applicantProfileId' => 999, // Temporary profile for unapproved applicants
+                ':applicantProfileId' => NULL, // Set to NULL instead of 999
                 ':schoolYearId' => $schoolYearId,
                 ':applyingForGradeLevelId' => $gradeLevelId,
                 ':enrolleeType' => $enrolleeType,
@@ -209,11 +212,14 @@ class AdmissionController
                 ':privacyAgreement' => 1
             ];
 
+            // Log the data being inserted for debugging
+            error_log("Attempting to insert application with data: " . print_r($data, true));
+
             // Insert application
             $applicationId = $this->admissionModel->create($data);
 
             if (!$applicationId) {
-                throw new Exception("Failed to create admission application");
+                throw new Exception("Database insert failed. Please check server logs.");
             }
 
             // Handle file uploads if any
@@ -235,6 +241,7 @@ class AdmissionController
         } catch (Exception $e) {
             $this->pdo->rollBack();
             error_log("Admission submission error: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -246,19 +253,19 @@ class AdmissionController
     {
         try {
             // Prepare email data
-            $studentFullName = trim($postData['studentFirstName'] . ' ' . 
-                                   ($postData['studentMiddleName'] ?? '') . ' ' . 
-                                   $postData['studentLastName']);
-            
-            $guardianFullName = trim($postData['guardianFirstName'] . ' ' . 
-                                    $postData['guardianLastName']);
-            
+            $studentFullName = trim($postData['studentFirstName'] . ' ' .
+                ($postData['studentMiddleName'] ?? '') . ' ' .
+                $postData['studentLastName']);
+
+            $guardianFullName = trim($postData['guardianFirstName'] . ' ' .
+                $postData['guardianLastName']);
+
             // Format grade level for display
             $gradeLevelDisplay = ucwords(str_replace(['-', '_'], ' ', $postData['gradeLevel']));
-            
+
             // Format enrollee type for display
             $enrolleeTypeDisplay = ucfirst($postData['enrolleeType']);
-            
+
             $emailData = [
                 'trackingNumber' => $trackingNumber,
                 'studentName' => $studentFullName,
@@ -273,10 +280,10 @@ class AdmissionController
 
             // Send email to guardian
             $guardianEmail = $postData['guardianEmail'] ?? null;
-            
+
             if ($guardianEmail) {
                 $emailSent = $this->mailer->sendAdmissionConfirmation($guardianEmail, $emailData);
-                
+
                 if (!$emailSent) {
                     error_log("Failed to send confirmation email to: " . $guardianEmail);
                 }

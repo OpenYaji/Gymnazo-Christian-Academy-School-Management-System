@@ -8,9 +8,7 @@ import ScienceImg from '../../../assets/img/sci2.jpg';
 import APImg from '../../../assets/img/ap1.png';
 import MapehImg from '../../../assets/img/mapeh1.png';
 
-
 const SubjectCard = ({ subject, onClick }) => {
-  // Sample background images - you can replace with actual subject-themed images
   const subjectImages = {
     'ENGLISH': EngImg,
     'MATH': MathImg,
@@ -20,6 +18,8 @@ const SubjectCard = ({ subject, onClick }) => {
     'MAPEH': MapehImg,
     'EDUKASYON SA PAGPAPAKATAO': 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400',
     'COMPUTER': 'https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=400',
+    'TECHNOLOGY AND LIVELIHOOD EDUCATION': 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400',
+    'MOTHER TONGUE': 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400',
     'default': 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400'
   };
 
@@ -32,7 +32,6 @@ const SubjectCard = ({ subject, onClick }) => {
       onClick={() => onClick(subject)}
       className="relative group cursor-pointer rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-48 border border-gray-200 dark:border-slate-700"
     >
-      {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${getBackgroundImage(subject.name)})` }}
@@ -40,23 +39,21 @@ const SubjectCard = ({ subject, onClick }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
       </div>
 
-      {/* Content */}
       <div className="relative h-full flex flex-col justify-end p-4">
-        {/* Bottom Info */}
         <div className="space-y-2">
           <h3 className="text-white font-bold text-lg truncate">{subject.name}</h3>
 
           {subject.schedule && (
             <div className="flex items-center gap-2 text-white/90 text-xs">
               <Clock size={14} />
-              <span>{subject.schedule}</span>
+              <span className="truncate">{subject.schedule}</span>
             </div>
           )}
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1 text-white/80 text-xs">
               <User size={12} />
-              <span className="truncate max-w-[150px]">{subject.teacher || 'Teacher Name'}</span>
+              <span className="truncate max-w-[150px]">{subject.teacher || 'Not Assigned'}</span>
             </div>
             <button className="text-[#F4D77D] text-xs font-semibold hover:underline">
               View Details →
@@ -74,7 +71,6 @@ const SubjectModal = ({ subject, isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white dark:bg-slate-800 rounded-2xl max-w-md w-full shadow-2xl border border-gray-200 dark:border-slate-700">
-        {/* Header */}
         <div className="relative p-6 border-b border-gray-200 dark:border-slate-700">
           <button
             onClick={onClose}
@@ -83,6 +79,9 @@ const SubjectModal = ({ subject, isOpen, onClose }) => {
             <X size={24} />
           </button>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white pr-8">{subject.name}</h2>
+          {subject.code && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Code: {subject.code}</p>
+          )}
           {subject.schedule && (
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 text-sm mt-2">
               <Clock size={16} />
@@ -91,9 +90,7 @@ const SubjectModal = ({ subject, isOpen, onClose }) => {
           )}
         </div>
 
-        {/* Content */}
         <div className="p-6 space-y-4">
-          {/* Teacher Info */}
           <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-slate-700/50 rounded-lg">
             <div className="bg-[#F4D77D] p-2 rounded-full">
               <User size={20} className="text-gray-800" />
@@ -104,7 +101,6 @@ const SubjectModal = ({ subject, isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Description */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Description</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
@@ -112,7 +108,6 @@ const SubjectModal = ({ subject, isOpen, onClose }) => {
             </p>
           </div>
 
-          {/* Additional Info */}
           {subject.room && (
             <div className="pt-4 border-t border-gray-200 dark:border-slate-700">
               <div className="flex items-center justify-between text-sm">
@@ -123,7 +118,6 @@ const SubjectModal = ({ subject, isOpen, onClose }) => {
           )}
         </div>
 
-        {/* Footer */}
         <div className="p-6 border-t border-gray-200 dark:border-slate-700">
           <button
             onClick={onClose}
@@ -150,7 +144,7 @@ const Subjects = () => {
   const fetchSubjects = async () => {
     try {
       const response = await axios.get('/backend/api/subjects/getStudentSubjects.php', {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        withCredentials: true
       });
 
       if (response.data.success) {
@@ -158,15 +152,6 @@ const Subjects = () => {
       }
     } catch (err) {
       console.error('Error fetching subjects:', err);
-      // Fallback sample data for demonstration
-      setSubjects([
-        { id: 1, name: 'ENGLISH', teacher: 'Ms. Sarah Johnson', schedule: 'Mon, Wed, Fri - 8:00 AM', description: 'Learn grammar, reading comprehension, and writing skills.', room: 'Room 101' },
-        { id: 2, name: 'MATH', teacher: 'Mr. John Smith', schedule: 'Mon-Fri - 9:00 AM', description: 'Basic arithmetic, algebra, and problem-solving techniques.', room: 'Room 102' },
-        { id: 3, name: 'FILIPINO', teacher: 'Gng. Maria Santos', schedule: 'Tue, Thu - 10:00 AM', description: 'Pag-aaral ng wika, panitikan, at kultura ng Pilipinas.', room: 'Room 103' },
-        { id: 4, name: 'SCIENCE', teacher: 'Mrs. Emily Davis', schedule: 'Mon, Wed - 1:00 PM', description: 'Explore biology, chemistry, physics, and earth science.', room: 'Room 201' },
-        { id: 5, name: 'ARALING PANLIPUNAN', teacher: 'Mr. Roberto Cruz', schedule: 'Tue, Thu - 2:00 PM', description: 'Kasaysayan, heograpiya, at lipunang pag-aaral.', room: 'Room 202' },
-        { id: 6, name: 'MAPEH', teacher: 'Coach Mark Lee', schedule: 'Fri - 3:00 PM', description: 'Music, Arts, Physical Education, and Health education.', room: 'Gym' }
-      ]);
     } finally {
       setLoading(false);
     }

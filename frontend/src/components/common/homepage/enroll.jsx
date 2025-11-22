@@ -377,11 +377,12 @@ const Enroll = () => {
                 body: submitData,
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
             const result = await response.json();
+
+            if (!response.ok) {
+                // Show the actual error message from the backend
+                throw new Error(result.message || `HTTP error! status: ${response.status}`);
+            }
 
             if (result.success) {
                 setTrackingNumber(result.tracking_number);

@@ -1,16 +1,19 @@
 <?php
 
-class Transaction {
+class Transaction
+{
     private $conn;
 
-    public function __construct($db) {
+    public function __construct($db)
+    {
         $this->conn = $db;
     }
 
     /**
      * Get student profile ID by user ID
      */
-    public function getStudentProfileIdByUserId($userId) {
+    public function getStudentProfileIdByUserId($userId)
+    {
         $query = "
             SELECT sp.StudentProfileID 
             FROM studentprofile sp 
@@ -33,7 +36,8 @@ class Transaction {
     /**
      * Get total unpaid balance for a student
      */
-    public function getTotalBalance($studentProfileId) {
+    public function getTotalBalance($studentProfileId)
+    {
         $query = "
             SELECT SUM(t.BalanceAmount) as totalBalance
             FROM transaction t
@@ -56,7 +60,8 @@ class Transaction {
     /**
      * Get current transaction for active school year
      */
-    public function getCurrentTransaction($studentProfileId) {
+    public function getCurrentTransaction($studentProfileId)
+    {
         $query = "
             SELECT t.TransactionID, t.TotalAmount, t.PaidAmount, t.BalanceAmount, t.DueDate
             FROM transaction t
@@ -79,7 +84,8 @@ class Transaction {
     /**
      * Get transaction item breakdown
      */
-    public function getTransactionItems($transactionId) {
+    public function getTransactionItems($transactionId)
+    {
         $query = "
             SELECT ti.Description as description, SUM(ti.Amount) as amount
             FROM transactionitem ti
@@ -99,9 +105,58 @@ class Transaction {
     }
 
     /**
+     * Get available unpaid transaction items for payment
+     */
+    public function getAvailablePaymentItems($transactionId)
+    {
+        $query = "
+            SELECT 
+                ti.Description as description,
+                ti.Amount as amount
+            FROM transactionitem ti
+            WHERE ti.TransactionID = :transaction_id
+            ORDER BY ti.Description
+        ";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':transaction_id', $transactionId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error in getAvailablePaymentItems: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get payment data for modal - uses BalanceAmount from transaction
+     */
+    public function getPaymentModalData($studentProfileId)
+    {
+        $currentTransaction = $this->getCurrentTransaction($studentProfileId);
+
+        if (!$currentTransaction) {
+            return null;
+        }
+
+        $availableItems = $this->getAvailablePaymentItems($currentTransaction['TransactionID']);
+
+        return [
+            'transactionId' => $currentTransaction['TransactionID'],
+            'dueDate' => $currentTransaction['DueDate'],
+            'totalAmount' => (float)$currentTransaction['TotalAmount'],
+            'paidAmount' => (float)$currentTransaction['PaidAmount'],
+            'balanceAmount' => (float)$currentTransaction['BalanceAmount'], // This is the correct unpaid balance
+            'availableItems' => $availableItems ?: []
+        ];
+    }
+
+    /**
      * Get payment history for a student
      */
-    public function getPaymentHistory($studentProfileId) {
+    public function getPaymentHistory($studentProfileId)
+    {
         $query = "
             SELECT
                 p.PaymentDateTime as dateTime,
@@ -127,6 +182,79 @@ class Transaction {
             return false;
         }
     }
-}
 
-?>
+    /**
+     * Submit a new payment
+     */
+    public function submitPayment($studentProfileId, $transactionId, $paymentData)
+    {
+        $query = "
+            INSERT INTO payment (
+                TransactionID, 
+                PaymentMethodID, 
+                AmountPaid, 
+                PaymentDateTime, 
+                VerificationStatus,
+                ReceiptImagePath,
+                ReferenceNumber,
+                PhoneNumber
+            ) VALUES (
+                :transaction_id,
+                :payment_method_id,
+                :amount_paid,
+                NOW(),
+                'Pending',
+                :receipt_path,
+                :reference_number,
+                :phone_number
+            )
+        ";
+
+        try {
+            $this->conn->beginTransaction();
+
+            // Get payment method ID
+            $methodId = $this->getPaymentMethodId($paymentData['method']);
+            if (!$methodId) {
+                throw new Exception('Invalid payment method');
+            }
+
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':transaction_id', $transactionId, PDO::PARAM_INT);
+            $stmt->bindParam(':payment_method_id', $methodId, PDO::PARAM_INT);
+            $stmt->bindParam(':amount_paid', $paymentData['amount'], PDO::PARAM_STR);
+            $stmt->bindParam(':receipt_path', $paymentData['receiptPath'], PDO::PARAM_STR);
+            $stmt->bindParam(':reference_number', $paymentData['reference'], PDO::PARAM_STR);
+            $stmt->bindParam(':phone_number', $paymentData['phoneNumber'], PDO::PARAM_STR);
+
+            $stmt->execute();
+            $paymentId = $this->conn->lastInsertId();
+
+            $this->conn->commit();
+            return $paymentId;
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            error_log("Error in submitPayment: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get payment method ID by name
+     */
+    private function getPaymentMethodId($methodName)
+    {
+        $query = "SELECT PaymentMethodID FROM paymentmethod WHERE MethodName = :method_name LIMIT 1";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':method_name', $methodName, PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? $result['PaymentMethodID'] : null;
+        } catch (PDOException $e) {
+            error_log("Error in getPaymentMethodId: " . $e->getMessage());
+            return null;
+        }
+    }
+}

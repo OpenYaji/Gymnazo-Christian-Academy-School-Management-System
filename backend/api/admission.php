@@ -2,7 +2,7 @@
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // Don't display errors to client
+ini_set('display_errors', 1); // Temporarily enable to see errors
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/../logs/error.log');
 
@@ -15,13 +15,17 @@ require_once __DIR__ . '/../controllers/AdmissionController.php';
 
 // Initialize controller
 try {
+    if (!$pdo) {
+        throw new Exception("Database connection failed");
+    }
     $controller = new AdmissionController($pdo);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'message' => 'Server configuration error'
+        'message' => 'Server configuration error: ' . $e->getMessage()
     ]);
+    error_log("Controller initialization error: " . $e->getMessage());
     exit;
 }
 
