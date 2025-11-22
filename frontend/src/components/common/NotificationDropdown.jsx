@@ -162,18 +162,16 @@ const NotificationDropdown = () => {
                                 <li
                                     key={notif.id}
                                     onClick={() => !notif.isRead && handleMarkAsRead(notif.id)}
-                                    className={`px-4 py-3 hover:bg-gray-100 dark:hover:bg-slate-600 cursor-pointer border-l-4 ${
-                                        notif.isRead
+                                    className={`px-4 py-3 hover:bg-gray-100 dark:hover:bg-slate-600 cursor-pointer border-l-4 ${notif.isRead
                                             ? 'border-transparent'
                                             : 'border-amber-500 bg-amber-50 dark:bg-slate-800'
-                                    }`}
+                                        }`}
                                 >
                                     <p
-                                        className={`text-sm ${
-                                            notif.isRead
+                                        className={`text-sm ${notif.isRead
                                                 ? 'text-gray-600 dark:text-gray-400'
                                                 : 'text-gray-800 dark:text-gray-200 font-medium'
-                                        }`}
+                                            }`}
                                     >
                                         {notif.message}
                                     </p>
